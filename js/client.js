@@ -18,7 +18,7 @@ braintree.dropin.create({
             }
             // Submit payload.nonce to your server
             console.log("payload is " + payload.nonce);
-            sendPost("/processpayment", "amount=" + amount + "&nonce=" + payload.nonce + "&merchantid=" + merchantid + "&transactionid=" + transactionid);
+            sendPost("/processpayment", "amount=" + amount + "&nonce=" + payload.nonce + "&merchantid=" + merchantid +"&user=" + user  + "&branchid=" + branchid);
         });
     });
 });

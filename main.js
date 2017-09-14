@@ -13,8 +13,8 @@ var path = require("path"); //pathing system
 var bodyParser = require('body-parser'); //parse POST data
 var session = require('express-session'); //temporary to store sensitive data, see if theres better way
 var authenticator = require("./nodemodjs/authenticator.js");
-var BTDatabaseFunction = require("./nodemodjs/BTCosmosDB");
 var queue1Function = require("./nodemodjs/queue1HashCreation");
+var jeDatabase = require("./nodemodjs/databaseFunctions.js")
 const cvars = require("./nodemodjs/commonvariables.js");
 const express = require('express'); //express is good
 const app = express();
@@ -100,14 +100,14 @@ app.get('/pay', function (req, res) { //change to app.post once debug finish
     //    res.render(path.join(__dirname + '/Home.html'));
     //    return;
     //}//check auth later
-    if (!req.query.amount || req.query.amount < 0.01 || !req.query.customer || !req.query.merchantid || !req.query.savedaddress) { //change to req.body if POST
+    if (!req.query.amount || req.query.amount < 0.01 || !req.query.customer || !req.query.merchantid || !req.query.branchid|| !req.query.savedaddress) { //change to req.body if POST
         res.send("<p>Please provide amount, customer and merchantid to pay to</p>");
         return;
     }
     var page = path.join(__dirname + '/index.html');
     var randHash = authenticator.genRandomizedLink(req.query.amount, req.query.customer, req.query.merchantid, req.query.savedaddress);
     res.send(randHash);
-    queue1Function.sendBotTransactionDetailsToTable(randHash,req.query.savedaddress,req.query.amount,req.query.merchantid,req.query.customer);
+    queue1Function.sendBotTransactionDetailsToTable(randHash,req.query.savedaddress,req.query.amount,req.query.merchantid,req.query.customer,req,query.branchid);
     //hash is the primary key*
 
     //var cpromise = BTDatabaseFunction.findBTtoken(req.query.customer);
@@ -142,7 +142,7 @@ app.post('/pay', function (req, res) {
     //    res.render(path.join(__dirname + '/Home.html'));
     //    return;
     //}//check auth later
-    if (!req.body.amount || req.body.amount < 0.01 || !req.body.customer || !req.body.merchantid || !req.body.savedaddress) { //change to req.body if POST
+    if (!req.body.amount || req.body.amount < 0.01 || !req.body.customer || !req.body.merchantid || !req.body.savedaddress|| !req.body.branchid) { //change to req.body if POST
         res.send("<p>Please provide amount, customer and merchantid to pay to</p>");
         return;
     }
@@ -150,7 +150,7 @@ app.post('/pay', function (req, res) {
 
     var randHash = authenticator.genRandomizedLink(req.body.amount + "", req.body.customer + "", req.body.merchantid + "", req.body.savedaddress + "");
     res.send(randHash);
-    queue1Function.sendBotTransactionDetailsToTable(randHash,req.body.savedaddress,req.body.amount,req.body.merchantid,req.body.customer);
+    queue1Function.sendBotTransactionDetailsToTable(randHash,req.body.savedaddress,req.body.amount,req.body.merchantid,req.body.customer,req,body.branchid);
 
     //customer.openCustomerPay(sess, req.body.amount, value, req.body.merchantid, res, page, req.body.savedAddress); //find customer, if customer not found overwrite but this should not happen
 
@@ -160,13 +160,13 @@ app.post('/pay', function (req, res) {
  * processpayment handler, customer.chargeCard for details
  */
 app.post('/processpayment', function (req, res) {
-    if (!req.body.transactionid || !req.body.amount || !req.body.nonce || !req.session.customer || !req.body.merchantid) {
+    if (!req.body.user || !req.body.amount || !req.body.nonce || !req.session.customer || !req.body.merchantid  || !req.body.branchid) {
         res.send("<p>Please provide transactionid, amount, nonce, customer token and merchantid</p>");
         return;
     }
     var storageAddress = req.session.storageAddress;
     console.log("storeaddress is " + storageAddress);
-    customer.chargeCard(req.body.transactionid, req.body.amount, req.body.nonce, req.session.customer, req.body.merchantid, res, storageAddress, req.session);
+    customer.chargeCard(req.body.amount, req.body.nonce, req.body.merchantid, res, storageAddress, req.session,req.body.user,req.body.branchid);
 });
 
 app.post('/autopayment', function (req, res) {
@@ -183,11 +183,11 @@ app.post('/autopayment', function (req, res) {
  * create customer handler, customer.createCustomer for details
  */
 app.get("/create/customer", function (req, res) {
-    if (!req.query.clientid || !req.query.contact_No || !req.query.pin) {
-        res.send("<p>Please provide clientid, contactno, pin</p>");
+    if (!req.query.clientid) {
+        res.send("<p>Please provide clientid</p>");
         return;
     }
-    customer.createCustomer(req.query.clientid, res, req.query.contact_No, req.query.pin);
+    customer.createBrainTreeCustomer(res, req.query.clientid);
 });
 
 app.get("/find/customer", function (req, res) {
@@ -195,11 +195,19 @@ app.get("/find/customer", function (req, res) {
         res.send("<p>Please provide clientid</p>");
         return;
     }
-    var cpromise = BTDatabaseFunction.findBTtoken(req.query.clientid);
+    var cpromise = jeDatabase.retrieveBrainTreeToken(req.query.clientid);
     cpromise.then(function(value) {
             console.log("test" + value);
             customer.retrieveCustomerCardDetails(value,res);
     });
+
+
+});
+
+app.get("/testcustomer", function (req, res) {
+    var page = path.join(__dirname + '/index.html');
+    
+    customer.openCustomerPay(req.session, 100,"12345",res,page,"123","123",3)
 
 
 });

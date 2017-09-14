@@ -12,6 +12,7 @@
     "url": "git+https://github.com/InfernoDragon0/npaymentmodule.git"
   },
   "dependencies": {
+    "azure-storage": "^2.5.0",
     "body-parser": "^1.18.1",
     "braintree": "^2.3.0",
     "ejs": "^2.5.7",

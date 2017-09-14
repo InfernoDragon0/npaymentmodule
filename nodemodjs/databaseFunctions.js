@@ -1,15 +1,16 @@
 const request = require('superagent');
 
-var url = 'http://858585d5.ngrok.io/api'
-
+var url = 'http://43b2198d.ngrok.io/api'
+// http://43b2198d.ngrok.io
 // createToken('NnGUnatosykldCDs6m5Ma4tBGlb6Wyue912JLQ==');
 
 
-module.exports.createToken=createToken;
-module.exports.retrieveUserByID=retrieveUserByID;
-module.exports.createNewUserAccount=createNewUserAccount;
-module.exports.createNewBrainTreeAccount=createNewBrainTreeAccount;
-module.exports.retrieveBrainTreeAccount=retrieveBrainTreeAccount;
+module.exports.createToken = createToken;
+module.exports.retrieveUserByID = retrieveUserByID;
+module.exports.createNewUserAccount = createNewUserAccount;
+module.exports.createNewBrainTreeAccount = createNewBrainTreeAccount;
+module.exports.retrieveBrainTreeAccount = retrieveBrainTreeAccount;
+module.exports.retrieveBrainTreeToken = retrieveBrainTreeToken;
 
 function createToken() {
     return new Promise((resolve, reject) => {
@@ -129,11 +130,12 @@ function createNewBrainTreeAccount(user_id, braintree_ID) {
 
 
 function retrieveBrainTreeAccount(user_id) {
-    openPromise.then((value) => {
+    return new Promise((resolve, reject) => {
         var found = 0 // 0 = no existing, 1=found
         var openPromise = createToken();
-        return new Promise((resolve, reject) => {
-            request.get(url + '/braintree')
+        openPromise.then((value) => {
+
+            request.get(url + 'username, firstname, lastname/braintree')
                 .set('Content-Type', 'application/json')
                 .set('Authorization', 'Bearer ' + value)
                 .end((err, res) => {
@@ -146,6 +148,58 @@ function retrieveBrainTreeAccount(user_id) {
                                 console.log(res.body[counter].braintree_user_id)
                                 found = 1
                                 resolve(res.body[counter])
+                            }
+                        }
+                        if (found == 0) {
+                            console.log("No Braintree Account Found for User ID: " + user_id)
+                            console.log("Please Create A Braintree Acount First")
+                            resolve('No BrainTree Account found!')
+                        } else if (found == 1) {
+                            console.log("Retrieved Sucessfuly");
+                            resolve('boo')
+                        }
+
+                    } else if (res.statusCode == 401) {
+                        console.log('Unauthorized')
+                        reject('unauthorized')
+                    } else {
+                        console.log('err =', err);
+                        reject(err)
+                    }
+                })
+        });
+    });
+};
+
+
+
+
+
+// var test = retrieveBrainTreeToken(3)
+// test.then((value)=>{
+//     console.log(value)
+// })
+
+
+function retrieveBrainTreeToken(user_id) {
+    return new Promise((resolve, reject) => {
+        var found = 0 // 0 = no existing, 1=found
+        var openPromise = createToken();
+        openPromise.then((value) => {
+
+            request.get(url + '/braintree')
+                .set('Content-Type', 'application/json')
+                .set('Authorization', 'Bearer ' + value)
+                .end((err, res) => {
+                    console.log(res.statusCode);
+                    if (res.statusCode >= 200 && res.statusCode < 299) {
+
+                        for (var counter = 0; counter < res.body.length; counter++) {
+                            if (res.body[counter].fk_user_id == user_id) {
+                                // console.log(res.body[counter].fk_user_id)
+                                // console.log(res.body[counter].braintree_user_id)
+                                found = 1
+                                resolve(res.body[counter].braintree_user_id)
                             }
                         }
                         if (found == 0) {
@@ -250,27 +304,7 @@ console.log('\n')// leave a space in the console
 //       });
 //     }
 
-// createToken()
 
-function createToken() {
-    return new Promise((resolve, reject) => {
-
-        var primary_key = "NnGUnatosykldCDs6m5Ma4tBGlb6Wyue912JLQ=="
-        request.POST(url + '/account/token')
-            .set('Content-Type', 'application/json')
-            .send({ "primary_key": primary_key })
-            .end((err, res) => {
-                if (res.statusCode == 200) {
-                    console.log('Successful\n')
-                    resolve(res);
-                }
-                else if (res.statusCode == 401) {
-                    console.log('Unauthorized\n')
-                    resolve(res);
-                }
-            })
-    });
-}
 
 // Find all transaction records
 
@@ -327,12 +361,11 @@ var form = {
 module.exports.createTransaction = createTransaction;
 
 function createTransaction(form) {
-    
     return new Promise((resolve, reject) => {
+
         var promiseCreateToken = createToken();
-        promiseCreateToken.then((value) => {
-            if (value.statusCode == 200) {
-                var token = value.body.token
+        promiseCreateToken.then((token) => {
+
                 request.POST(url + '/transaction')
                     .set('Content-Type', 'application/json')
                     .set('Accept', 'application/json')
@@ -348,14 +381,45 @@ function createTransaction(form) {
                             resolve(res);
                         }
                     })
-            }
-            else if (value.statusCode == 401) {
-                resolve("Unauthorized");
-            }
-            else {
-                console.log(err)
-                resolve(err)
-            }
+        })
+    });
+}
+
+module.exports.createTransactionSucess = createTransactionSucess;
+// createTransactionSucess('1', '1', '1', 'test', 100)
+
+// customer_id, merchant_id, btTransaction_id, datetime, amount, order_id)
+function createTransactionSucess(user_id, merchant_id, branch_id, btTransaction_id, amount) {
+    return new Promise((resolve, reject) => {
+        var form = {
+            "fk_user_id": user_id,
+            "fk_merchant_id": merchant_id,
+            "fk_branch_id": branch_id,
+            "braintree_transaction_id": btTransaction_id,
+            "transaction_amount": amount,
+            "transaction_type": 1 // Sucess
+        }
+        var promiseCreateToken = createToken();
+        promiseCreateToken.then((token) => {
+
+            request.post(url + '/transaction')
+                .set('Content-Type', 'application/json')
+                .set('Accept', 'application/json')
+                .set('Authorization', 'Bearer ' + token)
+                .send(form)
+                .end((err, res) => {
+                    console.log(res.body)
+                    if (res.statusCode == 200) {
+                        console.log('Transaction Response\n')
+                        resolve(res);
+                    }
+                    else if (res.statusCode == 400) {
+                        console.log('Invalid Transaction body\n')
+                        resolve(res);
+                    }
+                })
+
+
         })
     });
 }

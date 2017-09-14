@@ -6,7 +6,6 @@ var fakepinAuths = {"1" : "wUKw1LaFWay2weUen7Ru6PMNfLMJp3o375Ie4R6VHWw=", "2" : 
 var timetoexpire = 15 * 60;
 var crypto = require('crypto');
 var encryption = 'sha256';
-var database = require('./BTCosmosDB.js');
 
 module.exports.checkAuthorized = checkAuthorized;
 module.exports.authRequest = authRequest;
