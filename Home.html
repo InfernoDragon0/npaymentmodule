@@ -1,0 +1,28 @@
+<!doctype html>
+<html>
+    <link rel="stylesheet" href="materialize.css">
+<head>    
+    <h1>Jungle Element Login Page</h1>
+</head>
+<script
+  src="https://code.jquery.com/jquery-3.2.1.js"
+  integrity="sha256-DZAnKJ/6XZ9si04Hgrsxu/8s717jcIzLy3oi35EouyE="
+  crossorigin="anonymous"></script>
+<script src="materialize.js"></script>
+<script src="authClient.js"></script>
+<body>
+    <div class="container">
+        <div class="input-field col s6">
+            <input type="text" id="userid" class="validate"><br>
+            <label for="userid">User ID</label>
+        </div>
+        
+        <div class="input-field col s6">
+            <input type="password" id="pin" class="validate" minlength="6" maxlength="6"><br>
+            <label for="pin" data-error="Pin must be 6 characters!">Pin</label>
+        </div>
+        <button class="waves-effect waves-light btn" type="submit" value="Proceed" onclick="sendAuthRequest();">Authenticate</button>
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,19 @@
+<html>
+  <link rel="stylesheet" href="materialize.css">
+    <script> var clienttoken = '<%= clientoken %>';
+    var amount = '<%= amount %>';   
+    var merchantid = '<%= merchantid %>'; 
+    var transactionid = '<%= transactionid %>';
+     </script>
+    <h5 class="center-align">Paying to Restaurant <script>document.write(merchantid)</script></h5>
+    <h2 class="center-align">$<script>document.write(amount)</script></h2>
+<head>
+  <meta charset="utf-8">
+  <script src="https://js.braintreegateway.com/web/dropin/1.3.1/js/dropin.min.js"></script>
+</head>
+<body>
+  <div id="dropin-container"></div>
+  <button id="submit-button" class="waves-effect waves-light btn" style="width:100%;height:50px;">Confirm Payment</button>
+  <script src="client.js"></script>
+</body>
+</html>

@@ -1,0 +1,29 @@
+{
+  "name": "npaymentmodule",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node main.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/InfernoDragon0/npaymentmodule.git"
+  },
+  "dependencies": {
+    "body-parser": "^1.18.1",
+    "braintree": "^2.3.0",
+    "ejs": "^2.5.7",
+    "express": "^4.15.4",
+    "express-router": "0.0.1",
+    "express-session": "^1.15.5",
+    "superagent": "^3.6.0"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/InfernoDragon0/npaymentmodule/issues"
+  },
+  "homepage": "https://github.com/InfernoDragon0/npaymentmodule#readme"
+}
