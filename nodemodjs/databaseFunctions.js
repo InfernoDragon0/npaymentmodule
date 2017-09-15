@@ -1,24 +1,16 @@
 const request = require('superagent');
+const databaseConfig = require("./config/databaseConfig.js");
 
-var url = 'http://43b2198d.ngrok.io/api'
-// http://43b2198d.ngrok.io
-// createToken('NnGUnatosykldCDs6m5Ma4tBGlb6Wyue912JLQ==');
+const url =`${databaseConfig.url}`
+const primaryKey = `${databaseConfig.primary_key}`
 
 
-module.exports.createToken = createToken;
-module.exports.retrieveUserByID = retrieveUserByID;
-module.exports.createNewUserAccount = createNewUserAccount;
-module.exports.createNewBrainTreeAccount = createNewBrainTreeAccount;
-module.exports.retrieveBrainTreeAccount = retrieveBrainTreeAccount;
-module.exports.retrieveBrainTreeToken = retrieveBrainTreeToken;
-
-function createToken() {
+function createToken(primaryKey) {
     return new Promise((resolve, reject) => {
-        var primary_key = 'NnGUnatosykldCDs6m5Ma4tBGlb6Wyue912JLQ==';
         request.post(url + '/account/token')
             .set('Content-Type', 'application/json')
             .send({
-                "primary_key": primary_key
+                "primary_key": primaryKey
             })
             .end((err, res) => {
                 console.log(res.statusCode);
@@ -229,7 +221,7 @@ function retrieveBrainTreeToken(user_id) {
 
 
 
-console.log('\n')// leave a space in the console
+
 
 //works but not in use // in case kenneth want primary key out of create token
 
@@ -308,40 +300,30 @@ console.log('\n')// leave a space in the console
 
 // Find all transaction records
 
-module.exports.retrieveTransactions = retrieveTransactions;
 
 function retrieveTransactions() {
     return new Promise((resolve, reject) => {
         var promiseCreateToken = createToken();
-        promiseCreateToken.then((value) => {
-            if (value.statusCode == 200) {
-                var token = value.body.token
-                request.GET(url + '/transaction')
-                    .set('Content-Type', 'application/json')
-                    .set('Accept', 'application/json')
-                    .set('Authorization', 'Bearer ' + token)
-                    .end((err, res) => {
-                        if (res.statusCode == 200) {
-                            console.log('Transaction details retrieved successfully\n')
-                            resolve(res);
-                        }
-                        else if (res.statusCode == 400) {
-                            console.log('Invalid\n')
-                            resolve(res);
-                        }
-                        else if (res.statusCode == 404) {
-                            console.log('Transaction not found\n')
-                            resolve(res);
-                        }
-                    })
-            }
-            else if (value.statusCode == 401) {
-                resolve("Unauthorized");
-            }
-            else {
-                console.log(err)
-                resolve(err)
-            }
+        promiseCreateToken.then((token) => {
+
+            request.GET(url + '/transaction')
+                .set('Content-Type', 'application/json')
+                .set('Accept', 'application/json')
+                .set('Authorization', 'Bearer ' + token)
+                .end((err, res) => {
+                    if (res.statusCode == 200) {
+                        console.log('Transaction details retrieved successfully\n')
+                        resolve(res);
+                    }
+                    else if (res.statusCode == 400) {
+                        console.log('Invalid\n')
+                        resolve(res);
+                    }
+                    else if (res.statusCode == 404) {
+                        console.log('Transaction not found\n')
+                        resolve(res);
+                    }
+                })
         })
     });
 }
@@ -358,7 +340,7 @@ var form = {
 }
 */
 
-module.exports.createTransaction = createTransaction;
+
 
 function createTransaction(form) {
     return new Promise((resolve, reject) => {
@@ -366,26 +348,26 @@ function createTransaction(form) {
         var promiseCreateToken = createToken();
         promiseCreateToken.then((token) => {
 
-                request.POST(url + '/transaction')
-                    .set('Content-Type', 'application/json')
-                    .set('Accept', 'application/json')
-                    .set('Authorization', 'Bearer ' + token)
-                    .send(form)
-                    .end((err, res) => {
-                        if (res.statusCode == 200) {
-                            console.log('Transaction Response\n')
-                            resolve(res);
-                        }
-                        else if (res.statusCode == 400) {
-                            console.log('Invalid Transaction body\n')
-                            resolve(res);
-                        }
-                    })
+            request.POST(url + '/transaction')
+                .set('Content-Type', 'application/json')
+                .set('Accept', 'application/json')
+                .set('Authorization', 'Bearer ' + token)
+                .send(form)
+                .end((err, res) => {
+                    if (res.statusCode == 200) {
+                        console.log('Transaction Response\n')
+                        resolve(res);
+                    }
+                    else if (res.statusCode == 400) {
+                        console.log('Invalid Transaction body\n')
+                        resolve(res);
+                    }
+                })
         })
     });
 }
 
-module.exports.createTransactionSucess = createTransactionSucess;
+
 // createTransactionSucess('1', '1', '1', 'test', 100)
 
 // customer_id, merchant_id, btTransaction_id, datetime, amount, order_id)
@@ -426,94 +408,72 @@ function createTransactionSucess(user_id, merchant_id, branch_id, btTransaction_
 
 // Find transaction records by ID
 
-module.exports.retrieveIdTransaction = retrieveIdTransaction;
+
 
 function retrieveIdTransaction(transaction_id) {
     return new Promise((resolve, reject) => {
         var promiseCreateToken = createToken();
-        promiseCreateToken.then((value) => {
-            if (value.statusCode == 200) {
-                var token = value.body.token
-                request.GET(url + '/transaction/' + transaction_id)
-                    .set('Content-Type', 'application/json')
-                    .set('Accept', 'application/json')
-                    .set('Authorization', 'Bearer ' + token)
-                    .end((err, res) => {
-                        if (res.statusCode == 200) {
-                            console.log('Transaction record retrieved successfully\n')
-                            resolve(res);
-                        }
-                        else if (res.statusCode == 400) {
-                            console.log('Invalid ID supplied\n')
-                            resolve(res);
-                        }
-                        else if (res.statusCode == 404) {
-                            console.log('Transaction not found\n')
-                            resolve(res);
-                        }
-                    })
-            }
-            else if (value.statusCode == 401) {
-                resolve("Unauthorized");
-            }
-            else {
-                console.log(err)
-                resolve(err)
-            }
+        promiseCreateToken.then((token) => {
+            request.GET(url + '/transaction/' + transaction_id)
+                .set('Content-Type', 'application/json')
+                .set('Accept', 'application/json')
+                .set('Authorization', 'Bearer ' + token)
+                .end((err, res) => {
+                    if (res.statusCode == 200) {
+                        console.log('Transaction record retrieved successfully\n')
+                        resolve(res);
+                    }
+                    else if (res.statusCode == 400) {
+                        console.log('Invalid ID supplied\n')
+                        resolve(res);
+                    }
+                    else if (res.statusCode == 404) {
+                        console.log('Transaction not found\n')
+                        resolve(res);
+                    }
+                })
         })
     });
 }
 
 // Delete transaction record by ID
 
-module.exports.deleteIdTransaction = deleteIdTransaction;
+
 
 function deleteIdTransaction(transaction_id) {
     return new Promise((resolve, reject) => {
         var promiseCreateToken = createToken();
-        promiseCreateToken.then((value) => {
-            if (value.statusCode == 200) {
-                var token = value.body.token
-                request.DELETE(url + '/transaction/' + transaction_id)
-                    .set('Content-Type', 'application/json')
-                    .set('Accept', 'application/json')
-                    .set('Authorization', 'Bearer ' + token)
-                    .end((err, res) => {
-                        if (res.statusCode == 204) {
-                            console.log('Successfully deleted Transaction\n')
-                            resolve(res);
-                        }
-                        else if (res.statusCode == 400) {
-                            console.log('Invalid ID supplied\n')
-                            resolve(res);
-                        }
-                        else if (res.statusCode == 404) {
-                            console.log('Transaction not found\n')
-                            resolve(res);
-                        }
-                    })
-            }
-            else if (value.statusCode == 401) {
-                resolve("Unauthorized");
-            }
-            else {
-                console.log(err)
-                resolve(err)
-            }
+        promiseCreateToken.then((token) => {
+            request.DELETE(url + '/transaction/' + transaction_id)
+                .set('Content-Type', 'application/json')
+                .set('Accept', 'application/json')
+                .set('Authorization', 'Bearer ' + token)
+                .end((err, res) => {
+                    if (res.statusCode == 204) {
+                        console.log('Successfully deleted Transaction\n')
+                        resolve(res);
+                    }
+                    else if (res.statusCode == 400) {
+                        console.log('Invalid ID supplied\n')
+                        resolve(res);
+                    }
+                    else if (res.statusCode == 404) {
+                        console.log('Transaction not found\n')
+                        resolve(res);
+                    }
+                })
         })
     });
 }
 
 //Find all settlements records
 
-module.exports.retrieveSettlements = retrieveSettlements;
+
 
 function retrieveSettlements() {
     return new Promise((resolve, reject) => {
         var promiseCreateToken = createToken();
-        promiseCreateToken.then((value) => {
-            if (value.statusCode == 200) {
-                var token = value.body.token
+        promiseCreateToken.then((token) => {
                 request.GET(url + '/settlement')
                     .set('Content-Type', 'application/json')
                     .set('Accept', 'application/json')
@@ -532,14 +492,6 @@ function retrieveSettlements() {
                             resolve(res);
                         }
                     })
-            }
-            else if (value.statusCode == 401) {
-                resolve("Unauthorized");
-            }
-            else {
-                console.log(err)
-                resolve(err)
-            }
         })
     });
 }
@@ -554,14 +506,12 @@ var form = {
 }
 */
 
-module.exports.createSettlement = createSettlement;
+
 
 function createSettlement(form) {
     return new Promise((resolve, reject) => {
         var promiseCreateToken = createToken();
-        promiseCreateToken.then((value) => {
-            if (value.statusCode == 200) {
-                var token = value.body.token
+        promiseCreateToken.then((token) => {
                 request.POST(url + '/settlement')
                     .set('Content-Type', 'application/json')
                     .set('Accept', 'application/json')
@@ -577,28 +527,16 @@ function createSettlement(form) {
                             resolve(res);
                         }
                     })
-            }
-            else if (value.statusCode == 401) {
-                resolve("Unauthorized");
-            }
-            else {
-                console.log(err)
-                resolve(err)
-            }
         })
     });
 }
 
 // Find settlement records by ID
 
-module.exports.retrieveIdSettlement = retrieveIdSettlement;
-
 function retrieveIdSettlement(settlement_id) {
     return new Promise((resolve, reject) => {
         var promiseCreateToken = createToken();
-        promiseCreateToken.then((value) => {
-            if (value.statusCode == 200) {
-                var token = value.body.token
+        promiseCreateToken.then((token) => {
                 request.GET(url + '/settlement/' + settlement_id)
                     .set('Content-Type', 'application/json')
                     .set('Accept', 'application/json')
@@ -617,14 +555,6 @@ function retrieveIdSettlement(settlement_id) {
                             resolve(res);
                         }
                     })
-            }
-            else if (value.statusCode == 401) {
-                resolve("Unauthorized");
-            }
-            else {
-                console.log(err)
-                resolve(err)
-            }
         })
     });
 }
@@ -639,14 +569,12 @@ var form = {
   }
   */
 
-module.exports.updateIdSettlement = updateIdSettlement;
+
 
 function updateIdSettlement(settlement_id, form) {
     return new Promise((resolve, reject) => {
         var promiseCreateToken = createToken();
-        promiseCreateToken.then((value) => {
-            if (value.statusCode == 200) {
-                var token = value.body.token
+        promiseCreateToken.then((token) => {
                 request.PUT(url + '/settlement/' + settlement_id)
                     .set('Content-Type', 'application/json')
                     .set('Accept', 'application/json')
@@ -662,28 +590,18 @@ function updateIdSettlement(settlement_id, form) {
                             resolve(res);
                         }
                     })
-            }
-            else if (value.statusCode == 401) {
-                resolve("Unauthorized");
-            }
-            else {
-                console.log(err)
-                resolve(err)
-            }
         })
     });
 }
 
 // Delete settlement record by ID
 
-module.exports.deleteIdSettlement = deleteIdSettlement;
+
 
 function deleteIdSettlement(settlement_id) {
     return new Promise((resolve, reject) => {
         var promiseCreateToken = createToken();
-        promiseCreateToken.then((value) => {
-            if (value.statusCode == 200) {
-                var token = value.body.token
+        promiseCreateToken.then((token) => {
                 request.DELETE(url + '/settlement/' + settlement_id)
                     .set('Content-Type', 'application/json')
                     .set('Accept', 'application/json')
@@ -702,14 +620,6 @@ function deleteIdSettlement(settlement_id) {
                             resolve(res);
                         }
                     })
-            }
-            else if (value.statusCode == 401) {
-                resolve("Unauthorized");
-            }
-            else {
-                console.log(err)
-                resolve(err)
-            }
         })
     });
 }
@@ -721,14 +631,12 @@ var form = {
 }
 */
 
-module.exports.confirmSettlement = confirmSettlement;
+
 
 function confirmSettlement(settlement_id) {
     return new Promise((resolve, reject) => {
         var promiseCreateToken = createToken();
-        promiseCreateToken.then((value) => {
-            if (value.statusCode == 200) {
-                var token = value.body.token
+        promiseCreateToken.then((token) => {
                 request.PUT(url + '/settlement/completed')
                     .set('Content-Type', 'application/json')
                     .set('Accept', 'application/json')
@@ -744,15 +652,24 @@ function confirmSettlement(settlement_id) {
                             resolve(res);
                         }
                     })
-            }
-            else if (value.statusCode == 401) {
-                resolve("Unauthorized");
-            }
-            else {
-                console.log(err)
-                resolve(err)
-            }
         })
     });
 }
 
+module.exports.createToken = createToken;
+module.exports.retrieveUserByID = retrieveUserByID;
+module.exports.createNewUserAccount = createNewUserAccount;
+module.exports.createNewBrainTreeAccount = createNewBrainTreeAccount;
+module.exports.retrieveBrainTreeAccount = retrieveBrainTreeAccount;
+module.exports.retrieveBrainTreeToken = retrieveBrainTreeToken;
+module.exports.retrieveTransactions = retrieveTransactions;
+module.exports.createTransaction = createTransaction;
+module.exports.createTransactionSucess = createTransactionSucess;
+module.exports.retrieveIdTransaction = retrieveIdTransaction;
+module.exports.deleteIdTransaction = deleteIdTransaction;
+module.exports.retrieveSettlements = retrieveSettlements;
+module.exports.createSettlement = createSettlement;
+module.exports.retrieveIdSettlement = retrieveIdSettlement;
+module.exports.updateIdSettlement = updateIdSettlement;
+module.exports.deleteIdSettlement = deleteIdSettlement;
+module.exports.confirmSettlement = confirmSettlement;
