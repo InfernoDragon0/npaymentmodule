@@ -413,7 +413,7 @@ function createTransactionSucessWalletTop(user_id, btTransaction_id, amount) {
             "fk_user_id": user_id,
             "braintree_transaction_id": btTransaction_id,
             "transaction_amount": amount,
-            "transaction_type": 4 // Sucess
+            "transaction_type": 4 // Sucess Wallet Top Up
         }
         var promiseCreateToken = createToken();
         promiseCreateToken.then((token) => {
@@ -438,6 +438,71 @@ function createTransactionSucessWalletTop(user_id, btTransaction_id, amount) {
         })
     });
 }
+function createTransactionSucessWalletPay(user_id, merchant_id,branch_id, amount) {
+    return new Promise((resolve, reject) => {
+        var form = {
+            "fk_user_id": user_id,
+            "fk_merchant_id": merchant_id,
+            "fk_branch_id": branch_id,
+            "transaction_amount": amount,
+            "transaction_type": 1 // Sucess Wallet Pay
+        }
+        var promiseCreateToken = createToken();
+        promiseCreateToken.then((token) => {
+
+            request.post(url + '/transaction')
+                .set('Content-Type', 'application/json')
+                .set('Accept', 'application/json')
+                .set('Authorization', 'Bearer ' + token)
+                .send(form)
+                .end((err, res) => {
+                    console.log(res.body)
+                    if (res.statusCode == 200) {
+                        console.log('Transaction Response\n')
+                        resolve(res);
+                    }
+                    else if (res.statusCode == 400) {
+                        console.log('Invalid Transaction body\n')
+                        resolve(res);
+                    }
+                })
+
+        })
+    });
+}
+function createTransactionSucessWalletRefund(user_id, merchant_id,branch_id, amount) {
+    return new Promise((resolve, reject) => {
+        var form = {
+            "fk_user_id": user_id,
+            "fk_merchant_id": merchant_id,
+            "fk_branch_id": branch_id,
+            "transaction_amount": amount,
+            "transaction_type": 1 // Sucess Wallet Pay
+        }
+        var promiseCreateToken = createToken();
+        promiseCreateToken.then((token) => {
+
+            request.post(url + '/transaction')
+                .set('Content-Type', 'application/json')
+                .set('Accept', 'application/json')
+                .set('Authorization', 'Bearer ' + token)
+                .send(form)
+                .end((err, res) => {
+                    console.log(res.body)
+                    if (res.statusCode == 200) {
+                        console.log('Transaction Response\n')
+                        resolve(res);
+                    }
+                    else if (res.statusCode == 400) {
+                        console.log('Invalid Transaction body\n')
+                        resolve(res);
+                    }
+                })
+
+        })
+    });
+}
+
 
 // Find transaction records by ID
 
@@ -707,4 +772,7 @@ module.exports.createTransactionSucessWalletTop = createTransactionSucessWalletT
 module.exports.updateIdSettlement = updateIdSettlement;
 module.exports.deleteIdSettlement = deleteIdSettlement;
 module.exports.confirmSettlement = confirmSettlement;
+module.exports.createTransactionSucessWalletPay= createTransactionSucessWalletPay
+module.exports.createTransactionSucessWalletRefund=createTransactionSucessWalletRefund
+
 

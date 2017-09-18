@@ -192,6 +192,14 @@ app.get("/create/customer", function (req, res) {
     hyperWallet.insertNewClientWallet(req.query.clientid,req.query.clientid,0)
 });
 
+app.get("/create/merchantWallet", function (req, res) {
+    if (!req.query.merchantid) {
+        res.send("<p>Please provide merchantid</p>");
+        return;
+    }
+    hyperWallet.insertNewMerchantWallet(req.query.merchantid,req.query.merchantid,0)
+});
+
 app.get("/find/customer", function (req, res) {
     if (!req.query.clientid) {
         res.send("<p>Please provide clientid</p>");
@@ -214,14 +222,52 @@ app.get("/testcustomer", function (req, res) {
 
 });
 
-app.get("/topUpWallet", function (req, res) {
+
+
+// Wallet Pages // left 2FA
+
+app.get("/walletTopUp", function (req, res) {
     if (!req.query.clientid,!req.query.amount) {
         res.send("<p>Please provide clientid, amount</p>");
         return;
     }
     customer.openCustomerPay(req.session, res.query.amount,-1,res,page,"savedAddress",-1,res.query.clientid)
+    // Adds a transaction record along the process, unless the other methods
     
 });
+
+app.get("/walletPay", function (req, res) {
+    if (!req.query.clientid,!req.query.merchantid,!req.query.branchid,!req.query.amount) {
+        res.send("<p>Please provide clientid, merchantid, amount</p>");
+        return;
+    }
+    var errorCheck = hyperWallet.processTransaction(req.query.clientid,req.query.merchantid,req.query.amount)
+    errorCheck.then((err)=>{
+        if(err='error'){
+            res.send("<p>Error occured during processing of transaction please try again</p>");
+        }
+        else{
+            jeDatabase.createTransactionSucessWalletPay(req.query.clientid,req.query.merchantid,req.query.branchid,req.query.amount)
+        }
+    })
+});
+
+app.get("/walletRefund", function (req, res) {
+    if (!req.query.clientid,!req.query.merchantid,!req.query.branchid,!req.query.amount) {
+        res.send("<p>Please provide clientid merchantid, amount</p>");
+        return;
+    }
+        var errorCheck = hyperWallet.createTransactionRefund(req.query.clientid,req.query.merchantid,req.query.amount)
+    errorCheck.then((err)=>{
+        if(err='error'){
+            res.send("<p>Error occured during processing of transaction refund please try again</p>");
+        }
+        else{
+            jeDatabase.createTransactionSucessWalletRefund(req.query.clientid,req.query.merchantid,req.query.branchid,req.query.amount)
+        }
+    })
+});
+
 
 /**
  * handles 404 errors here
