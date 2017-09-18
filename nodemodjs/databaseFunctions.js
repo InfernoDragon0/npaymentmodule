@@ -3,10 +3,13 @@ const databaseConfig = require("./config/databaseConfig.js");
 
 const url =`${databaseConfig.url}`
 const primaryKey = `${databaseConfig.primary_key}`
+// const primaryKey = 'NnGUnatosykldCDs6m5Ma4tBGlb6Wyue912JLQ=='
 
 
-function createToken(primaryKey) {
+
+function createToken() {
     return new Promise((resolve, reject) => {
+        // console.log(primaryKey)
         request.post(url + '/account/token')
             .set('Content-Type', 'application/json')
             .send({
@@ -171,7 +174,7 @@ function retrieveBrainTreeAccount(user_id) {
 // test.then((value)=>{
 //     console.log(value)
 // })
-
+// retrieveBrainTreeToken(3)
 
 function retrieveBrainTreeToken(user_id) {
     return new Promise((resolve, reject) => {
@@ -401,6 +404,36 @@ function createTransactionSucess(user_id, merchant_id, branch_id, btTransaction_
                     }
                 })
 
+        })
+    });
+}
+function createTransactionSucessWalletTop(user_id, btTransaction_id, amount) {
+    return new Promise((resolve, reject) => {
+        var form = {
+            "fk_user_id": user_id,
+            "braintree_transaction_id": btTransaction_id,
+            "transaction_amount": amount,
+            "transaction_type": 4 // Sucess
+        }
+        var promiseCreateToken = createToken();
+        promiseCreateToken.then((token) => {
+
+            request.post(url + '/transaction')
+                .set('Content-Type', 'application/json')
+                .set('Accept', 'application/json')
+                .set('Authorization', 'Bearer ' + token)
+                .send(form)
+                .end((err, res) => {
+                    console.log(res.body)
+                    if (res.statusCode == 200) {
+                        console.log('Transaction Response\n')
+                        resolve(res);
+                    }
+                    else if (res.statusCode == 400) {
+                        console.log('Invalid Transaction body\n')
+                        resolve(res);
+                    }
+                })
 
         })
     });
@@ -665,11 +698,13 @@ module.exports.retrieveBrainTreeToken = retrieveBrainTreeToken;
 module.exports.retrieveTransactions = retrieveTransactions;
 module.exports.createTransaction = createTransaction;
 module.exports.createTransactionSucess = createTransactionSucess;
+module.exports.confirmSettlement = confirmSettlement;
 module.exports.retrieveIdTransaction = retrieveIdTransaction;
 module.exports.deleteIdTransaction = deleteIdTransaction;
 module.exports.retrieveSettlements = retrieveSettlements;
 module.exports.createSettlement = createSettlement;
-module.exports.retrieveIdSettlement = retrieveIdSettlement;
+module.exports.createTransactionSucessWalletTop = createTransactionSucessWalletTop;
 module.exports.updateIdSettlement = updateIdSettlement;
 module.exports.deleteIdSettlement = deleteIdSettlement;
 module.exports.confirmSettlement = confirmSettlement;
+

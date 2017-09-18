@@ -15,6 +15,7 @@ var session = require('express-session'); //temporary to store sensitive data, s
 var authenticator = require("./nodemodjs/authenticator.js");
 var queue1Function = require("./nodemodjs/queue1HashCreation");
 var jeDatabase = require("./nodemodjs/databaseFunctions.js")
+var hyperWallet = require("./nodemodjs/hyperwallet.js")
 const cvars = require("./nodemodjs/commonvariables.js");
 const express = require('express'); //express is good
 const app = express();
@@ -188,6 +189,7 @@ app.get("/create/customer", function (req, res) {
         return;
     }
     customer.createBrainTreeCustomer(res, req.query.clientid);
+    hyperWallet.insertNewClientWallet(req.query.clientid,req.query.clientid,0)
 });
 
 app.get("/find/customer", function (req, res) {
@@ -210,6 +212,15 @@ app.get("/testcustomer", function (req, res) {
     customer.openCustomerPay(req.session, 100,"12345",res,page,"123","123",3)
 
 
+});
+
+app.get("/topUpWallet", function (req, res) {
+    if (!req.query.clientid,!req.query.amount) {
+        res.send("<p>Please provide clientid, amount</p>");
+        return;
+    }
+    customer.openCustomerPay(req.session, res.query.amount,-1,res,page,"savedAddress",-1,res.query.clientid)
+    
 });
 
 /**

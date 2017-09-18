@@ -1,6 +1,6 @@
 var databaseConfig = {}
 
-databaseConfig.url = 'http://43b2198d.ngrok.io/api'
+databaseConfig.url = 'http://c80e790b.ngrok.io/api'
 
 databaseConfig.primary_key = 'NnGUnatosykldCDs6m5Ma4tBGlb6Wyue912JLQ=='
 

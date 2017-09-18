@@ -15,7 +15,7 @@
 
 const cvars = require("./commonvariables.js");
 var jeDatabase = require("./databaseFunctions.js")
-
+var hyperWallet = require("./hyperwallet.js")
 module.exports.chargeCard = chargeCard;
 module.exports.autoChargeCard = autoChargeCard;
 module.exports.openCustomerPay = openCustomerPay;
@@ -66,9 +66,13 @@ function chargeCard(amount, nonce, merchantid, res, storageAddress, sess, user_i
                     console.log("braintreereceipt = "+braintreereceipt);
 
                     console.log("amount = "+amount);
-                    
+                    if(merchantid== -1){
+                    jeDatabase.createTransactionSucessWalletTop(user_id, braintreereceipt, amount);
+                    hyperWallet.createTransactionTopUpWallet(user_id,amount)
+                    }
+                    else{
                     jeDatabase.createTransactionSucess(user_id, merchantid, branch_id, braintreereceipt, amount);
-                    
+                    }
                     // BTDatabasefunction.paymentSucessful(transactionid,braintreereceipt); // <<<<<<<<
 
                     if (merchantid == -1) {
@@ -88,7 +92,7 @@ function chargeCard(amount, nonce, merchantid, res, storageAddress, sess, user_i
                 console.log(err);
             }
         });
-    })
+    }) 
     //use merchantid for database stuff
 
 }
