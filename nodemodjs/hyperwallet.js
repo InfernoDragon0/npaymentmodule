@@ -32,7 +32,7 @@ function processTransaction(clientID, merchantID, amount) {
                 console.log("insufficent funds please top up!")
                 resolve('error')
             }
-        })
+        })dasdasdsa
     })
 };
 // retrieveTransaction();
