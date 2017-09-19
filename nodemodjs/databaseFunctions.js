@@ -6,7 +6,7 @@ const primaryKey = `${databaseConfig.primary_key}`
 // const primaryKey = 'NnGUnatosykldCDs6m5Ma4tBGlb6Wyue912JLQ=='
 
 
-
+// createToken()
 function createToken() {
     return new Promise((resolve, reject) => {
         // console.log(primaryKey)
@@ -140,10 +140,10 @@ function retrieveBrainTreeAccount(user_id) {
 
                         for (var counter = 0; counter < res.body.length; counter++) {
                             if (res.body[counter].fk_user_id == user_id) {
-                                console.log(res.body[counter].fk_user_id)
-                                console.log(res.body[counter].braintree_user_id)
+                                // console.log(res.body[counter].fk_user_id)
+                                // console.log(res.body[counter].braintree_user_id)
                                 found = 1
-                                resolve(res.body[counter])
+                                resolve(res.body[counter].braintree_user_id)
                             }
                         }
                         if (found == 0) {
@@ -195,6 +195,7 @@ function retrieveBrainTreeToken(user_id) {
                                 // console.log(res.body[counter].fk_user_id)
                                 // console.log(res.body[counter].braintree_user_id)
                                 found = 1
+                                console.log(res.body[counter])
                                 resolve(res.body[counter].braintree_user_id)
                             }
                         }
@@ -304,13 +305,13 @@ function retrieveBrainTreeToken(user_id) {
 
 // Find all transaction records
 
-
+// retrieveIdTransaction()
 function retrieveTransactions() {
     return new Promise((resolve, reject) => {
         var promiseCreateToken = createToken();
         promiseCreateToken.then((token) => {
 
-            request.GET(url + '/transaction')
+            request.get(url + '/transaction')
                 .set('Content-Type', 'application/json')
                 .set('Accept', 'application/json')
                 .set('Authorization', 'Bearer ' + token)

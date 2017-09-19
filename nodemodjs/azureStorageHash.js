@@ -10,6 +10,7 @@ var retryOperations = new azure.ExponentialRetryPolicyFilter();
 var entGen = azure.TableUtilities.entityGenerator; 
 // sendBotTransactionDetailsToTable("test","test","test","test","test","test") 
 function sendBotTransactionDetailsToTable(genHash, address, payment, merchantID, clientID, branchID) { 
+    var x_to_expire = 900
     var tDetails = { 
         PartitionKey: entGen.String('transactionUriHash'), 
         RowKey: entGen.String(genHash), 
@@ -17,7 +18,8 @@ function sendBotTransactionDetailsToTable(genHash, address, payment, merchantID,
         paymentAmount: entGen.String(payment), 
         merchantId: entGen.String(merchantID), 
         branchId: entGen.String(branchID), 
-        clientId: entGen.String(clientID) 
+        clientId: entGen.String(clientID) ,
+        expiredTimestamp: entGen.Int64(Date.now() + x_to_expire)
     }; 
     let tableSvc = azure.createTableService(AzureWebJobsStorageEndpoint).withFilter(retryOperations); 
     tableSvc.createTableIfNotExists(tableName, function (error, result, response) { 
@@ -46,7 +48,7 @@ function sendBotTransactionDetailsToTable(genHash, address, payment, merchantID,
  
  
 // sendBotTransactionDetailsToTable("genhash1","address1","payment1","merchantID-1","clientID-1"); 
-// searchQueue1Storage("test","test","test","test") 
+// searchQueue1Storage("mTIE47wo%2BvdUEGG8lHLfGHMjlks5Y6VF5k2OA%2FFhTqY","test","test","test") 
 function searchQueue1Storage(hash, res, sess, page) { 
     let tableSvc = azure.createTableService(AzureWebJobsStorageEndpoint).withFilter(retryOperations); 
     tableSvc.retrieveEntity(tableName, 'transactionUriHash', hash, function (error, result, response) { 
@@ -59,14 +61,16 @@ function searchQueue1Storage(hash, res, sess, page) {
             var q2clientid = result.clientId._; 
             var q2savedAddress = result.botAddress._; 
             var q2branch = result.branchId._; 
+            console.log("client ID is "+q2clientid)
  
- 
- 
-            var cpromise = jeDatabase.retrieveBrainTreeToken(q2clientid);  // << change this 
-            cpromise.then(function (customertoken) { 
-                customer.openCustomerPay(sess, q2payment, customertoken, q2merchant, res, page, q2savedAddress,q2branch,q2clientid); //find customer, if customer not found overwrite but this should not happen 
-                sess["clientid"] = result.clientId._; 
-            }); 
+            customer.openCustomerPay(sess, q2payment, q2merchant, res, page, q2savedAddress,q2branch,q2clientid); //find customer, if customer not found overwrite but this should not happen 
+            sess["clientid"] = result.clientId._; 
+
+
+            // var cpromise = jeDatabase.retrieveBrainTreeToken(q2clientid);  // << change this 
+            // cpromise.then(function (customertoken) { 
+                
+            // }); 
         } 
  
  

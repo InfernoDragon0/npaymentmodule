@@ -175,8 +175,8 @@ function createBrainTreeCustomer(res, user_id) {
  * 
  * @param {*string} customerToken the customertoken to retrieve card details from
  */
-function openCustomerPay(sess, amount, merchantid, res, page, savedaddress, branch_id, user) {
-    var openPromise1 = jeDatabase.retrieveBrainTreeToken(user)
+function openCustomerPay(sess, amount, merchantid, res, page, savedaddress, branch_id, clientID) {
+    var openPromise1 = jeDatabase.retrieveBrainTreeToken(clientID)
     openPromise1.then((braintreeToken) => {
     console.log(braintreeToken)
     cvars.gateway.customer.find(braintreeToken, function (err, customer) {
@@ -190,7 +190,7 @@ function openCustomerPay(sess, amount, merchantid, res, page, savedaddress, bran
                         amount: amount,
                         merchantid: merchantid,
                         branch_id: branch_id,
-                        user: user
+                        user: clientID
                     });
             });
         }
