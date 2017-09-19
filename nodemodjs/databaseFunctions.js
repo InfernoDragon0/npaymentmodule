@@ -445,7 +445,7 @@ function createTransactionSucessWalletPay(user_id, merchant_id,branch_id, amount
             "fk_merchant_id": merchant_id,
             "fk_branch_id": branch_id,
             "transaction_amount": amount,
-            "transaction_type": 1 // Sucess Wallet Pay
+            "transaction_type": 5 // Sucess Wallet Pay
         }
         var promiseCreateToken = createToken();
         promiseCreateToken.then((token) => {
@@ -477,7 +477,7 @@ function createTransactionSucessWalletRefund(user_id, merchant_id,branch_id, amo
             "fk_merchant_id": merchant_id,
             "fk_branch_id": branch_id,
             "transaction_amount": amount,
-            "transaction_type": 1 // Sucess Wallet Pay
+            "transaction_type": 6 // Sucess Wallet Refund
         }
         var promiseCreateToken = createToken();
         promiseCreateToken.then((token) => {
