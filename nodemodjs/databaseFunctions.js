@@ -34,7 +34,7 @@ function createToken() {
 
 
 // retrieveUserByID(2);
-retrieveUserByID(3);
+// retrieveUserByID(3);
 function retrieveUserByID(userID) {
     return new Promise((resolve, reject) => {
         var openPromise = createToken(); //move this 2 below return new promise

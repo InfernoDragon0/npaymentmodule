@@ -52,6 +52,10 @@ app.get('/', function (req, res) { //base page
     res.render(path.join(__dirname + '/Home.html'));
 });
 
+app.get('/walletPresentation', function (req, res) { //base page
+    res.render(path.join(__dirname + '/walletPresentation.html'));
+});
+
 /**
 * API Description:
  * Authentication for 6 digit pins and users (not connected to database yet)
