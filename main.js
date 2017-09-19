@@ -13,7 +13,7 @@ var path = require("path"); //pathing system
 var bodyParser = require('body-parser'); //parse POST data
 var session = require('express-session'); //temporary to store sensitive data, see if theres better way
 var authenticator = require("./nodemodjs/authenticator.js");
-var queue1Function = require("./nodemodjs/queue1HashCreation");
+var queue1Function = require("./nodemodjs/azureStorageHash.js");
 var jeDatabase = require("./nodemodjs/databaseFunctions.js")
 var hyperWallet = require("./nodemodjs/hyperwallet.js")
 const cvars = require("./nodemodjs/commonvariables.js");
@@ -102,13 +102,13 @@ app.get('/pay', function (req, res) { //change to app.post once debug finish
     //    return;
     //}//check auth later
     if (!req.query.amount || req.query.amount < 0.01 || !req.query.customer || !req.query.merchantid || !req.query.branchid|| !req.query.savedaddress) { //change to req.body if POST
-        res.send("<p>Please provide amount, customer and merchantid to pay to</p>");
+        res.send("<p>Please provide amount, customer, merchantid, branchid and savedaddress</p>");
         return;
     }
     var page = path.join(__dirname + '/index.html');
     var randHash = authenticator.genRandomizedLink(req.query.amount, req.query.customer, req.query.merchantid, req.query.savedaddress);
     res.send(randHash);
-    queue1Function.sendBotTransactionDetailsToTable(randHash,req.query.savedaddress,req.query.amount,req.query.merchantid,req.query.customer,req,query.branchid);
+    queue1Function.sendBotTransactionDetailsToTable(randHash,req.query.savedaddress,req.query.amount,req.query.merchantid,req.query.customer,req.query.branchid);
     //hash is the primary key*
 
     //var cpromise = BTDatabaseFunction.findBTtoken(req.query.customer);

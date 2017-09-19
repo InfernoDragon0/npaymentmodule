@@ -1,16 +1,14 @@
 const azure = require('azure-storage')
 const customer = require('./customer.js');
-var jeDatabase = require("./databaseFunctions.js")
+const jeDatabase = require("./databaseFunctions.js")
 // connection to queue 1
-let AzureWebJobsStorage = 'DefaultEndpointsProtocol=https;AccountName=calebtestqueue;AccountKey=1hbmP/8F5WRK5V2qubfwKd3D0mpJD7uaiCxf7NUO0Czn5iklf9uOqIz/A3mYvYUcfouvWEZskszhV35QBVuuOg==;EndpointSuffix=core.windows.net'
-
-module.exports.sendBotTransactionDetailsToTable = sendBotTransactionDetailsToTable;
-module.exports.searchQueue1Storage = searchQueue1Storage;
-
+ 
+const AzureWebJobsStorageEndpoint= 'DefaultEndpointsProtocol=https;AccountName=jestorage;AccountKey=an5hL2LOUQd57VRQKxpQ8GGcQENyv+dAmGW+sDwGViKzeLGXCWV+rGWHq4PvOofWT4ABdceh+5VCikzAWvQFxQ==;EndpointSuffix=core.windows.net'
+const tableName = 'paymentStateTable';
 
 var retryOperations = new azure.ExponentialRetryPolicyFilter();
 var entGen = azure.TableUtilities.entityGenerator;
-
+// sendBotTransactionDetailsToTable("test","test","test","test","test","test")
 function sendBotTransactionDetailsToTable(genHash, address, payment, merchantID, clientID, branchID) {
     var tDetails = {
         PartitionKey: entGen.String('transactionUriHash'),
@@ -21,11 +19,11 @@ function sendBotTransactionDetailsToTable(genHash, address, payment, merchantID,
         branchId: entGen.String(branchID),
         clientId: entGen.String(clientID)
     };
-    let tableSvc = azure.createTableService(AzureWebJobsStorage).withFilter(retryOperations);
-    tableSvc.createTableIfNotExists('b2sTransactionDetails', function (error, result, response) {
+    let tableSvc = azure.createTableService(AzureWebJobsStorageEndpoint).withFilter(retryOperations);
+    tableSvc.createTableIfNotExists(tableName, function (error, result, response) {
         if (!error) {
             let tDetailsBuffer = new Buffer(JSON.stringify(tDetails)).toString('base64');
-            tableSvc.insertEntity('b2sTransactionDetails', tDetails, function (error, result, response) {
+            tableSvc.insertEntity(tableName, tDetails, function (error, result, response) {
                 if (!error) {
                     console.log("Entity insertion Succesful!");
                     console.log("-----");
@@ -36,6 +34,7 @@ function sendBotTransactionDetailsToTable(genHash, address, payment, merchantID,
                 }
             });
             // Table exists or created
+            console.log("test sucess")
         }
         else {
 
@@ -46,11 +45,11 @@ function sendBotTransactionDetailsToTable(genHash, address, payment, merchantID,
 };
 
 
-//sendBotTransactionDetailsToTable("genhash1","address1","payment1","merchantID-1","clientID-1");
-
+// sendBotTransactionDetailsToTable("genhash1","address1","payment1","merchantID-1","clientID-1");
+// searchQueue1Storage("test","test","test","test")
 function searchQueue1Storage(hash, res, sess, page) {
-    let tableSvc = azure.createTableService(AzureWebJobsStorage).withFilter(retryOperations);
-    tableSvc.retrieveEntity('b2sTransactionDetails', 'transactionUriHash', hash, function (error, result, response) {
+    let tableSvc = azure.createTableService(AzureWebJobsStorageEndpoint).withFilter(retryOperations);
+    tableSvc.retrieveEntity(tableName, 'transactionUriHash', hash, function (error, result, response) {
         if (!error) {
             // result contains the entity
             console.log("Search Result");
@@ -59,7 +58,7 @@ function searchQueue1Storage(hash, res, sess, page) {
             var q2merchant = result.merchantId._;
             var q2clientid = result.clientId._;
             var q2savedAddress = result.botAddress._;
-            var q2branch = result.branchID._;
+            var q2branch = result.branchId._;
 
 
 
@@ -91,7 +90,7 @@ function deleEntityFromQueue1(hash) {
         PartitionKey: { '_': 'transactionDetail4Hash' },
         RowKey: { '_': hash }
     };
-    let tableSvc = azure.createTableService(AzureWebJobsStorage).withFilter(retryOperations);
+    let tableSvc = azure.createTableService(AzureWebJobsStorageEndpoint).withFilter(retryOperations);
     tableSvc.deleteEntity('b2sTransactionDetails', task, function (error, response) {
         if (!error) {
             console.log("entity sucessfully deleted!");;
@@ -101,3 +100,6 @@ function deleEntityFromQueue1(hash) {
 };
 
 //deleEntityFromQueue1("1");
+module.exports.sendBotTransactionDetailsToTable = sendBotTransactionDetailsToTable;
+module.exports.searchQueue1Storage = searchQueue1Storage;
+
