@@ -251,7 +251,7 @@ app.get("/walletPay", function (req, res) {
             res.send("<p>Error occured during processing of transaction please try again</p>");
         }
         else{
-            jeDatabase.createTransactionSucessWalletPay(req.query.clientid,req.query.merchantid,req.query.branchid,req.query.amount)
+            jeDatabase.createTransactionWalletPayment(req.query.clientid,req.query.merchantid,req.query.branchid,req.query.amount)
         }
     })
 });
@@ -267,7 +267,7 @@ app.get("/walletRefund", function (req, res) {
             res.send("<p>Error occured during processing of transaction refund please try again</p>");
         }
         else{
-            jeDatabase.createTransactionSucessWalletRefund(req.query.clientid,req.query.merchantid,req.query.branchid,req.query.amount)
+            jeDatabase.createTransactionWalletRefund(req.query.clientid,req.query.merchantid,req.query.branchid,req.query.amount)
         }
     })
 });

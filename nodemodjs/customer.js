@@ -67,11 +67,11 @@ function chargeCard(amount, nonce, merchantid, res, storageAddress, sess, user_i
 
                     console.log("amount = "+amount);
                     if(merchantid== -1){
-                    jeDatabase.createTransactionSucessWalletTop(user_id, braintreereceipt, amount);
+                    jeDatabase.createTransactionWalletTopup(user_id, braintreereceipt, amount);
                     hyperWallet.createTransactionTopUpWallet(user_id,amount)
                     }
                     else{
-                    jeDatabase.createTransactionSucess(user_id, merchantid, branch_id, braintreereceipt, amount);
+                    jeDatabase.createTransactionCreditPayment(user_id, merchantid, branch_id, braintreereceipt, amount);
                     }
                     // BTDatabasefunction.paymentSucessful(transactionid,braintreereceipt); // <<<<<<<<
 
