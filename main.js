@@ -56,33 +56,33 @@ app.get('/walletPresentation', function (req, res) { //base page
     res.render(path.join(__dirname + '/walletPresentation.html'));
 });
 
-app.post('/walletPresentation', function (req, res) { //base page
-    if (!req.body.clientID) { 
-        res.send("<p>Please provide a valid client ID</p>");
-        return;
-    }
+// app.post('/walletPresentation', function (req, res) { //base page
+//     if (!req.body.clientID) { 
+//         res.send("<p>Please provide a valid client ID</p>");
+//         return;
+//     }
     
-    if (req.body.clientID){
-        var databaseFunctions = require('./nodemodjs/databaseFunctions.js')
-        var promiseSearchClient = databaseFunctions.retrieveUserByID(req.body.clientId)
-        promiseSearchClient.then((value)=>{
-            if(value.statusCode >= 200 && value.statusCode <= 299){
-        res.render(path.join(__dirname + '/walletPresentation/Wallet.html'), clientID);
-            }else{
-                res.render("<script>alert('"+value+"')</script>", clientID, path.join(__dirname + '/walletPresentation.html'))
-            }
-        })
-    }
+//     if (req.body.clientID){
+//         var databaseFunctions = require('./nodemodjs/databaseFunctions.js')
+//         var promiseSearchClient = databaseFunctions.retrieveUserByID(req.body.clientId)
+//         promiseSearchClient.then((value)=>{
+//             if(value.statusCode >= 200 && value.statusCode <= 299){
+//         res.render(path.join(__dirname + '/walletPresentation/Wallet.html'), clientID);
+//             }else{
+//                 res.render("<script>alert('"+value+"')</script>", clientID, path.join(__dirname + '/walletPresentation.html'))
+//             }
+//         })
+//     }
     
-});
+// });
 
-app.get('/walletPresentation/Wallet', function (req, res) { //base page
-    if (!req.query.clientID) { 
-        res.send("<p>Please provide a valid client ID</p>");
-        return;
-    }
-    res.render(path.join(__dirname + '/walletPresentation/Wallet.html'));
-});
+// app.get('/walletPresentation/Wallet', function (req, res) { //base page
+//     if (!req.query.clientID) { 
+//         res.send("<p>Please provide a valid client ID</p>");
+//         return;
+//     }
+//     res.render(path.join(__dirname + '/walletPresentation/Wallet.html'));
+// });
 
 /**
 * API Description:
