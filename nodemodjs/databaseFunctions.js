@@ -1337,7 +1337,6 @@ module.exports.retrieveBrainTreeToken = retrieveBrainTreeToken;
 module.exports.retrieveTransactions = retrieveTransactions;
 // module.exports.createTransaction = createTransaction;
 // module.exports.createTransactionSucess = createTransactionSucess;
-module.exports.confirmSettlement = confirmSettlement;
 module.exports.retrieveIdTransaction = retrieveIdTransaction;
 module.exports.deleteIdTransaction = deleteIdTransaction;
 module.exports.retrieveSettlements = retrieveSettlements;
@@ -1345,7 +1344,6 @@ module.exports.createSettlement = createSettlement;
 // module.exports.createTransactionSucessWalletTop = createTransactionSucessWalletTop;
 module.exports.updateIdSettlement = updateIdSettlement;
 module.exports.deleteIdSettlement = deleteIdSettlement;
-module.exports.confirmSettlement = confirmSettlement;
 // module.exports.createTransactionSucessWalletPay= createTransactionSucessWalletPay
 // module.exports.createTransactionSucessWalletRefund=createTransactionSucessWalletRefund
 
