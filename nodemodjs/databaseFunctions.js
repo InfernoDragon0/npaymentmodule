@@ -234,8 +234,6 @@ function retrieveTransactions() {
         var promiseCreateToken = createToken();
         promiseCreateToken.then((value) => {
 
-            if (value.statusCode >= 200 && value.statusCode <= 299) {
-
                 request.get(url + '/transaction')
                     .set('Content-Type', 'application/json')
                     .set('Accept', 'application/json')
@@ -257,9 +255,6 @@ function retrieveTransactions() {
                             resolve(-1)
                         }
                     })
-            }else {
-                resolve(value)
-            }
         })
     });
 }
@@ -288,8 +283,6 @@ function createTransactionCreditPayment(fk_user_id, fk_merchant_id, fk_branch_id
         var promiseCreateToken = createToken();
         promiseCreateToken.then((value) => {
 
-            if (value.statusCode >= 200 && value.statusCode <= 299) {
-
                 request.post(url + '/transaction')
                     .set('Content-Type', 'application/json')
                     .set('Accept', 'application/json')
@@ -315,10 +308,6 @@ function createTransactionCreditPayment(fk_user_id, fk_merchant_id, fk_branch_id
                             resolve(-1)
                         }
                     })
-            }
-            else {
-                resolve(value)
-            }
         })
     });
 }
@@ -327,8 +316,6 @@ function createTransactionCreditChargeback(fk_user_id, fk_merchant_id, fk_branch
     return new Promise((resolve, reject) => {
         var promiseCreateToken = createToken();
         promiseCreateToken.then((value) => {
-
-            if (value.statusCode >= 200 && value.statusCode <= 299) {
 
                 request.post(url + '/transaction')
                     .set('Content-Type', 'application/json')
@@ -354,10 +341,6 @@ function createTransactionCreditChargeback(fk_user_id, fk_merchant_id, fk_branch
                             resolve(-1)
                         }
                     })
-            }
-            else {
-                resolve(value)
-            }
         })
     });
 }
@@ -366,8 +349,6 @@ function createTransactionCreditRefund(fk_user_id, fk_merchant_id, fk_branch_id,
     return new Promise((resolve, reject) => {
         var promiseCreateToken = createToken();
         promiseCreateToken.then((value) => {
-
-            if (value.statusCode >= 200 && value.statusCode <= 299) {
 
                 request.post(url + '/transaction')
                     .set('Content-Type', 'application/json')
@@ -394,10 +375,6 @@ function createTransactionCreditRefund(fk_user_id, fk_merchant_id, fk_branch_id,
                             resolve(-1)
                         }
                     })
-            }
-            else {
-                resolve(value)
-            }
         })
     });
 }
@@ -406,8 +383,6 @@ function createTransactionWalletTopup(fk_user_id, braintree_transaction_id, tran
     return new Promise((resolve, reject) => {
         var promiseCreateToken = createToken();
         promiseCreateToken.then((value) => {
-
-            if (value.statusCode >= 200 && value.statusCode <= 299) {
 
                 request.post(url + '/transaction')
                     .set('Content-Type', 'application/json')
@@ -432,10 +407,6 @@ function createTransactionWalletTopup(fk_user_id, braintree_transaction_id, tran
                             resolve(-1)
                         }
                     })
-            }
-            else {
-                resolve(value)
-            }
         })
     });
 }
@@ -444,8 +415,6 @@ function createTransactionWalletPayment(fk_user_id, fk_merchant_id, fk_branch_id
     return new Promise((resolve, reject) => {
         var promiseCreateToken = createToken();
         promiseCreateToken.then((value) => {
-
-            if (value.statusCode >= 200 && value.statusCode <= 299) {
 
                 request.post(url + '/transaction')
                     .set('Content-Type', 'application/json')
@@ -471,10 +440,6 @@ function createTransactionWalletPayment(fk_user_id, fk_merchant_id, fk_branch_id
                             resolve(-1)
                         }
                     })
-            }
-            else {
-                resolve(value)
-            }
         })
     });
 }
@@ -483,8 +448,6 @@ function createTransactionWalletRefund(fk_user_id, fk_merchant_id, fk_branch_id,
     return new Promise((resolve, reject) => {
         var promiseCreateToken = createToken();
         promiseCreateToken.then((value) => {
-
-            if (value.statusCode >= 200 && value.statusCode <= 299) {
 
                 request.post(url + '/transaction')
                     .set('Content-Type', 'application/json')
@@ -510,10 +473,6 @@ function createTransactionWalletRefund(fk_user_id, fk_merchant_id, fk_branch_id,
                             resolve(-1)
                         }
                     })
-            }
-            else {
-                resolve(value)
-            }
         })
     });
 }
@@ -669,8 +628,6 @@ return new Promise((resolve, reject) => {
     var promiseCreateToken = createToken();
     promiseCreateToken.then((value) => {
 
-        if (value.statusCode >= 200 && value.statusCode <= 299) {
-
             request.get(url + '/transaction/' + transaction_id)
                 .set('Content-Type', 'application/json')
                 .set('Accept', 'application/json')
@@ -692,10 +649,6 @@ return new Promise((resolve, reject) => {
                         resolve(-1)
                     }
                 })
-        }
-        else {
-            resolve(value)
-        }
     })
 });
 }
@@ -712,8 +665,6 @@ function deleteIdTransaction(transaction_id) {
 return new Promise((resolve, reject) => {
     var promiseCreateToken = createToken();
     promiseCreateToken.then((value) => {
-
-        if (value.statusCode >= 200 && value.statusCode <= 299) {
 
             request.delete(url + '/transaction/' + transaction_id)
                 .set('Content-Type', 'application/json')
@@ -736,10 +687,6 @@ return new Promise((resolve, reject) => {
                         resolve(-1)
                     }
                 })
-        }
-        else {
-            resolve(value)
-        }
     })
 });
 }
@@ -756,8 +703,6 @@ function retrieveSettlements() {
 return new Promise((resolve, reject) => {
     var promiseCreateToken = createToken();
     promiseCreateToken.then((value) => {
-
-        if (value.statusCode >= 200 && value.statusCode <= 299) {
 
             request.get(url + '/settlement')
                 .set('Content-Type', 'application/json')
@@ -780,10 +725,6 @@ return new Promise((resolve, reject) => {
                         resolve(-1)
                     }
                 })
-        }
-        else {
-            resolve(value)
-        }
     })
 });
 }
@@ -807,8 +748,6 @@ return new Promise((resolve, reject) => {
     var promiseCreateToken = createToken();
     promiseCreateToken.then((value) => {
 
-        if (value.statusCode >= 200 && value.statusCode <= 299) {
-
             request.post(url + '/settlement')
                 .set('Content-Type', 'application/json')
                 .set('Accept', 'application/json')
@@ -831,10 +770,6 @@ return new Promise((resolve, reject) => {
                         resolve(-1)
                     }
                 })
-        }
-        else {
-            resolve(value)
-        }
     })
 });
 }
@@ -851,8 +786,6 @@ function retrieveIdSettlement(settlement_id) {
 return new Promise((resolve, reject) => {
     var promiseCreateToken = createToken();
     promiseCreateToken.then((value) => {
-
-        if (value.statusCode >= 200 && value.statusCode <= 299) {
 
             request.get(url + '/settlement/' + settlement_id)
                 .set('Content-Type', 'application/json')
@@ -875,10 +808,6 @@ return new Promise((resolve, reject) => {
                         resolve(-1)
                     }
                 })
-        }
-        else {
-            resolve(value)
-        }
     })
 });
 }
@@ -895,8 +824,6 @@ function deleteIdSettlement(settlement_id) {
 return new Promise((resolve, reject) => {
     var promiseCreateToken = createToken();
     promiseCreateToken.then((value) => {
-
-        if (value.statusCode >= 200 && value.statusCode <= 299) {
 
             request.delete(url + '/settlement/' + settlement_id)
                 .set('Content-Type', 'application/json')
@@ -919,10 +846,6 @@ return new Promise((resolve, reject) => {
                         resolve(-1)
                     }
                 })
-        }
-        else {
-            resolve(value)
-        }
     })
 });
 }
@@ -946,8 +869,6 @@ return new Promise((resolve, reject) => {
     var promiseCreateToken = createToken();
     promiseCreateToken.then((value) => {
 
-        if (value.statusCode >= 200 && value.statusCode <= 299) {
-
             request.put(url + '/transaction/completed')
                 .set('Content-Type', 'application/json')
                 .set('Accept', 'application/json')
@@ -966,10 +887,6 @@ return new Promise((resolve, reject) => {
                         resolve(-1)
                     }
                 })
-        }
-        else {
-            resolve(value)
-        }
     })
 });
 }
@@ -986,8 +903,6 @@ function retrieveMerchants() {
 return new Promise((resolve, reject) => {
     var promiseCreateToken = createToken();
     promiseCreateToken.then((value) => {
-
-        if (value.statusCode >= 200 && value.statusCode <= 299) {
 
             request.get(url + '/merchant')
                 .set('Content-Type', 'application/json')
@@ -1010,10 +925,6 @@ return new Promise((resolve, reject) => {
                         resolve(-1)
                     }
                 })
-        }
-        else {
-            resolve(value)
-        }
     })
 });
 }
@@ -1042,8 +953,6 @@ return new Promise((resolve, reject) => {
     var promiseCreateToken = createToken();
     promiseCreateToken.then((value) => {
 
-        if (value.statusCode >= 200 && value.statusCode <= 299) {
-
             request.post(url + '/merchant')
                 .set('Content-Type', 'application/json')
                 .set('Accept', 'application/json')
@@ -1071,10 +980,6 @@ return new Promise((resolve, reject) => {
                         resolve(-1)
                     }
                 })
-        }
-        else {
-            resolve(value)
-        }
     })
 });
 }
@@ -1091,8 +996,6 @@ function retrieveIdMerchant(merchantId) {
 return new Promise((resolve, reject) => {
     var promiseCreateToken = createToken();
     promiseCreateToken.then((value) => {
-
-        if (value.statusCode >= 200 && value.statusCode <= 299) {
 
             request.get(url + '/merchant/' + merchantId)
                 .set('Content-Type', 'application/json')
@@ -1115,10 +1018,6 @@ return new Promise((resolve, reject) => {
                         resolve(-1)
                     }
                 })
-        }
-        else {
-            resolve(value)
-        }
     })
 });
 }
@@ -1135,8 +1034,6 @@ function retrieveBranches() {
 return new Promise((resolve, reject) => {
     var promiseCreateToken = createToken();
     promiseCreateToken.then((value) => {
-
-        if (value.statusCode >= 200 && value.statusCode <= 299) {
 
                     request.get(url + '/branch')
                     .set('Content-Type', 'application/json')
@@ -1159,10 +1056,6 @@ return new Promise((resolve, reject) => {
                             resolve(-1)
                         }
                     })
-        }
-        else {
-            resolve(value)
-        }
     })
 });
 }
@@ -1190,8 +1083,6 @@ function createBranch(branch_name, branch_address, branch_phone, branch_url, fir
 return new Promise((resolve, reject) => {
     var promiseCreateToken = createToken();
     promiseCreateToken.then((value) => {
-
-        if (value.statusCode >= 200 && value.statusCode <= 299) {
 
             request.post(url + '/branch')
                 .set('Content-Type', 'application/json')
@@ -1221,10 +1112,6 @@ return new Promise((resolve, reject) => {
                         resolve(-1)
                     }
                 })
-        }
-        else {
-            resolve(value)
-        }
     })
 });
 }
@@ -1241,8 +1128,6 @@ function retrieveIdBranch(branch_id) {
 return new Promise((resolve, reject) => {
     var promiseCreateToken = createToken();
     promiseCreateToken.then((value) => {
-
-        if (value.statusCode >= 200 && value.statusCode <= 299) {
 
             request.get(url + '/branch/' + branch_id)
                 .set('Content-Type', 'application/json')
@@ -1265,10 +1150,6 @@ return new Promise((resolve, reject) => {
                         resolve(-1)
                     }
                 })
-        }
-        else {
-            resolve(value)
-        }
     })
 });
 }
@@ -1296,7 +1177,6 @@ function updateIdSettlement(settlement_id, fk_merchant_id, fk_branch_id, fk_tran
 return new Promise((resolve, reject) => {
     var promiseCreateToken = createToken();
     promiseCreateToken.then((value) => {
-        if (value.statusCode >= 200 && value.statusCode <= 299) {
             request.put(url + '/settlement/' + settlement_id)
                 .set('Content-Type', 'application/json')
                 .set('Accept', 'application/json')
@@ -1320,10 +1200,6 @@ return new Promise((resolve, reject) => {
                         resolve(-1)
                     }
                 })
-        }
-        else {
-            resolve(value)
-        }
     })
 });
 }
