@@ -300,6 +300,24 @@ app.get("/walletRefund", function (req, res) {
     })
 });
 
+//  Houliang here
+
+
+app.get("/createSettlement", function (req, res) {
+    if (!req.query.clientid,!req.query.amount) {
+        res.send("<p>Please provide clientid, amount</p>");
+        return;
+    }
+    customer.openCustomerPay(req.session, res.query.amount,-1,res,page,"savedAddress",-1,res.query.clientid)
+    // Adds a transaction record along the process, unless the other methods
+    
+});
+
+
+
+
+
+
 
 /**
  * handles 404 errors here
