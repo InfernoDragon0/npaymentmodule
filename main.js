@@ -284,17 +284,12 @@ app.get("/walletPay", function (req, res) {
     }
     var errorCheck = hyperWallet.processTransaction(req.query.clientid,req.query.merchantid,req.query.amount)
     errorCheck.then((err)=>{
-<<<<<<< HEAD
-        jeDatabase.createTransactionSucessWalletPay(req.query.clientid,req.query.merchantid,req.query.branchid,req.query.amount)
-        res.send("<p>Transaction Completed</p>")
-=======
         if(err='error'){
             res.send("<p>Error occured during processing of transaction please try again</p>");
         }
         else{
             jeDatabase.createTransactionWalletPayment(req.query.clientid,req.query.merchantid,req.query.branchid,req.query.amount)
         }
->>>>>>> master
     })
 });
 
