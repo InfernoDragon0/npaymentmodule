@@ -72,7 +72,7 @@ function chargeCard(amount, nonce, merchantid, res, storageAddress, sess, user_i
                     hyperWallet.createTransactionTopUpWallet(user_id,amount)
                     }
                     else{
-                    jeDatabase.createTransactionSucess(user_id, merchantid, branch_id, braintreereceipt, amount);
+                    jeDatabase.createTransactionCreditPayment(user_id, merchantid, branch_id, braintreereceipt, amount);
                     }
                     // BTDatabasefunction.paymentSucessful(transactionid,braintreereceipt); // <<<<<<<<
 

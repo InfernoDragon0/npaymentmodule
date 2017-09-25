@@ -56,6 +56,34 @@ app.get('/walletPresentation', function (req, res) { //base page
     res.render(path.join(__dirname + '/walletPresentation.html'));
 });
 
+// app.post('/walletPresentation', function (req, res) { //base page
+//     if (!req.body.clientID) { 
+//         res.send("<p>Please provide a valid client ID</p>");
+//         return;
+//     }
+    
+//     if (req.body.clientID){
+//         var databaseFunctions = require('./nodemodjs/databaseFunctions.js')
+//         var promiseSearchClient = databaseFunctions.retrieveUserByID(req.body.clientId)
+//         promiseSearchClient.then((value)=>{
+//             if(value.statusCode >= 200 && value.statusCode <= 299){
+//         res.render(path.join(__dirname + '/walletPresentation/Wallet.html'), clientID);
+//             }else{
+//                 res.render("<script>alert('"+value+"')</script>", clientID, path.join(__dirname + '/walletPresentation.html'))
+//             }
+//         })
+//     }
+    
+// });
+
+// app.get('/walletPresentation/Wallet', function (req, res) { //base page
+//     if (!req.query.clientID) { 
+//         res.send("<p>Please provide a valid client ID</p>");
+//         return;
+//     }
+//     res.render(path.join(__dirname + '/walletPresentation/Wallet.html'));
+// });
+
 /**
 * API Description:
  * Authentication for 6 digit pins and users (not connected to database yet)
@@ -248,8 +276,17 @@ app.get("/walletPay", function (req, res) {
     }
     var errorCheck = hyperWallet.processTransaction(req.query.clientid,req.query.merchantid,req.query.amount)
     errorCheck.then((err)=>{
+<<<<<<< HEAD
         jeDatabase.createTransactionSucessWalletPay(req.query.clientid,req.query.merchantid,req.query.branchid,req.query.amount)
         res.send("<p>Transaction Completed</p>")
+=======
+        if(err='error'){
+            res.send("<p>Error occured during processing of transaction please try again</p>");
+        }
+        else{
+            jeDatabase.createTransactionWalletPayment(req.query.clientid,req.query.merchantid,req.query.branchid,req.query.amount)
+        }
+>>>>>>> master
     })
 });
 
@@ -264,10 +301,28 @@ app.get("/walletRefund", function (req, res) {
             res.send("<p>Error occured during processing of transaction refund please try again</p>");
         }
         else{
-            jeDatabase.createTransactionSucessWalletRefund(req.query.clientid,req.query.merchantid,req.query.branchid,req.query.amount)
+            jeDatabase.createTransactionWalletRefund(req.query.clientid,req.query.merchantid,req.query.branchid,req.query.amount)
         }
     })
 });
+
+//  Houliang here
+
+
+app.get("/createSettlement", function (req, res) {
+    if (!req.query.clientid,!req.query.amount) {
+        res.send("<p>Please provide clientid, amount</p>");
+        return;
+    }
+    customer.openCustomerPay(req.session, res.query.amount,-1,res,page,"savedAddress",-1,res.query.clientid)
+    // Adds a transaction record along the process, unless the other methods
+    
+});
+
+
+
+
+
 
 
 /**
