@@ -19,6 +19,7 @@ module.exports.insertNewMerchantWallet = insertNewMerchantWallet;
 module.exports.createTransaction = createTransaction;
 module.exports.createTransactionRefund = createTransactionRefund;
 module.exports.createTransactionTopUpWallet = createTransactionTopUpWallet;
+module.exports.retrieveTransactionByID = retrieveTransactionByID;
 
 function processTransaction(clientID, merchantID, amount) {
     return new Promise((resolve, reject) => {

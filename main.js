@@ -330,6 +330,17 @@ app.get("/createSettlement", function (req, res) {
 });
 
 
+app.post("/customerhistory", function (req, res) {
+    if (!req.body.clientid) {
+        res.send("<p>Please provide clientid, amount</p>");
+        return;
+    }
+    hyperWallet.retrieveTransactionByID(parseInt(req.body.clientid))
+    
+    
+});
+
+
 
 
 
