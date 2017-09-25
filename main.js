@@ -252,7 +252,7 @@ app.get("/testcustomer", function (req, res) {
 
 });
 
-app.get("/walletAdd", function (req, res) {
+app.post("/walletAdd", function (req, res) {
     if (!req.body.clientid,!req.body.amount,!req.body.nonce) {
         res.send("<p>Please provide clientid, amount</p>");
         return;
