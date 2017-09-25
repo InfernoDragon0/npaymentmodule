@@ -48,7 +48,7 @@ function retrieveTransaction() {
         });
     });
 };
-
+retrieveTransactionByID(123)
 function retrieveTransactionByID(clientid) {
     return new Promise((resolve, reject) => {
         request(url + 'api/system/transactions', function (error, response, body) {
@@ -62,6 +62,7 @@ function retrieveTransactionByID(clientid) {
                 if (element.asset == "resource:org.acme.jenetwork.clientWallet#clientWalletID:" + clientid)
                     clientarray.push(element)
             });
+            console.log("clientarray is " + clientarray)
             resolve(clientarray);
         });
     });
