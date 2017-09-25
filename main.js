@@ -162,8 +162,6 @@ app.get('/payhash', function (req, res) { //TEST FUNCTION FOR HASH
     }
     var hash = encodeURIComponent(req.query.hash);
     var page = path.join(__dirname + '/index.html');
-    //var cpromise = BTDatabaseFunction.findBTtoken(req.query.customer);
-    // database.searchPayment(req.query.hash);
     queue1Function.searchQueue1Storage(hash, res,sess,page);
     // customer.openCustomerPay(sess, amount, customertoken, merchant, res, page, savedAddress); //find customer, if customer not found overwrite but this should not happen
 
@@ -254,7 +252,17 @@ app.get("/testcustomer", function (req, res) {
 
 });
 
-
+app.get("/walletAdd", function (req, res) {
+    if (!req.body.clientid,!req.body.amount,!req.body.nonce) {
+        res.send("<p>Please provide clientid, amount</p>");
+        return;
+    }
+    customer.chargeByNonceClient(req.body.amount, req.body.nonce,req.body.clientid);
+    
+    //customer.openCustomerPay(req.session, res.query.amount,-1,res,page,"savedAddress",-1,res.query.clientid)
+    // Adds a transaction record along the process, unless the other methods
+    
+});
 
 // Wallet Pages // left 2FA
 
