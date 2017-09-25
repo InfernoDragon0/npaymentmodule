@@ -318,6 +318,16 @@ app.post("/walletPay", function (req, res) {
     })
 });
 
+app.post("/getwalletamount", function (req, res) {
+    if (!req.body.clientid) {
+        res.send("<p>Please provide clientid</p>");
+        return;
+    }
+    hyperWallet.getClientWalletByClientID(req.body.clientid).then((value) => {
+            res.send(JSON.stringify(value))
+    })
+});
+
 app.get("/walletRefund", function (req, res) {
     if (!req.query.clientid,!req.query.merchantid,!req.query.branchid,!req.query.amount) {
         res.send("<p>Please provide clientid merchantid, amount</p>");

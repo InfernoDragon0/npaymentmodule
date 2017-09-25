@@ -75,6 +75,7 @@ function getClientWalletByClientID(id) {
         request(url + 'api/clientWallet/clientWalletID%3A' + id, function (error, response, body) {
             if (error) {
                 console.log('error:', error); // Print the error if one occurred 
+                resolve("No data available")
                 return;
             }
             console.log('body:', body);
