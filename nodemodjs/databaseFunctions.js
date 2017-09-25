@@ -1,8 +1,8 @@
 const request = require('superagent');
 const databaseConfig = require("./config/databaseConfig.js");
 
-const url =`${databaseConfig.url}`
-const primaryKey = `${databaseConfig.primary_key}`
+const url =`${databaseConfig.url}` || process.env.URL
+const primaryKey = `${databaseConfig.primary_key}` || process.env.PRIMARY_KEY
 // const primaryKey = 'NnGUnatosykldCDs6m5Ma4tBGlb6Wyue912JLQ=='
 
 
