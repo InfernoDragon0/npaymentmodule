@@ -22,7 +22,7 @@ module.exports.openCustomerPay = openCustomerPay;
 module.exports.createBrainTreeCustomer = createBrainTreeCustomer;
 module.exports.retrieveCustomerCardDetails = retrieveCustomerCardDetails;
 module.exports.openCustomerPayWithoutPage = openCustomerPayWithoutPage;
-
+module.exports.chargeByNonceClient = chargeByNonceClient;
 /**
  * API Description:
  * This is process payment method for single card charges
