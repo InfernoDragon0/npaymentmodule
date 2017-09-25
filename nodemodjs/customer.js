@@ -68,7 +68,7 @@ function chargeCard(amount, nonce, merchantid, res, storageAddress, sess, user_i
                     console.log("amount = "+amount);
                     if(merchantid== -1){
                         var id = sess["clientid"];
-                    jeDatabase.createTransactionSucessWalletTop(user_id, braintreereceipt, amount);
+                    jeDatabase.createTransactionWalletTopup(user_id,braintreereceipt,amount); // positive amount(user_id, braintreereceipt, amount);
                     hyperWallet.createTransactionTopUpWallet(user_id,amount)
                     }
                     else{
@@ -116,7 +116,7 @@ function chargeByNonceClient(amount, nonce, clientid,res) {
                     var last4digit = result.transaction.creditCard.last4;
                     res.send("Payment of $" + amount + " has been made successfully. Payment is charged to card **** " + last4digit + " Thank you!");
                    
-                    jeDatabase.createTransactionSucessWalletTop(clientid, braintreereceipt, amount);
+                    jeDatabase.createTransactionWalletTopup(); // positive amount(clientid, braintreereceipt, amount);
                     hyperWallet.createTransactionTopUpWallet(clientid,amount)
                 }
                 else if (!result.success && result.transaction) {
