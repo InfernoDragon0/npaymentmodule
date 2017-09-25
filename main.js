@@ -335,7 +335,9 @@ app.post("/customerhistory", function (req, res) {
         res.send("<p>Please provide clientid, amount</p>");
         return;
     }
-    hyperWallet.retrieveTransactionByID(parseInt(req.body.clientid))
+    hyperWallet.retrieveTransactionByID(parseInt(req.body.clientid)).then((value) => {
+        res.send(value)
+    })
     
     
 });

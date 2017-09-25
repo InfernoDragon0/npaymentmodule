@@ -65,7 +65,7 @@ function retrieveTransactionByID(clientid) {
                     clientarray.push(element)
             });
             console.log("clientarray is " + JSON.stringify(clientarray))
-            resolve(clientarray);
+            resolve(JSON.stringify(clientarray));
         });
     });
 };
