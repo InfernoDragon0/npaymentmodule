@@ -264,7 +264,7 @@ app.post("/walletAdd", function (req, res) {
         res.send("<p>Please provide clientid, amount</p>");
         return;
     }
-    console.log("DASDAS"+req.body.clientID)
+    // console.log("DASDAS"+req.body.clientID)
     
     customer.chargeByNonceClient(req.body.amount, req.body.nonce,req.body.clientID,res);
     //customer.openCustomerPay(req.session, res.query.amount,-1,res,page,"savedAddress",-1,res.query.clientid)
