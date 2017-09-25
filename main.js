@@ -313,6 +313,7 @@ app.post("/walletPay", function (req, res) {
         }
         else{
             jeDatabase.createTransactionWalletPayment(req.body.clientid,req.body.merchantid,req.body.branchid,req.body.amount)
+            res.send("Your payment to Merchant " + merchantid + ": branch " + branchid + " of $" + amount + " is successful.")
         }
     })
 });
@@ -333,6 +334,15 @@ app.get("/walletRefund", function (req, res) {
     })
 });
 
+app.post("/retrieveuserid", function (req, res) {
+    if (!req.body.clientid) {
+        res.send("<p>Please provide clientid</p>");
+        return;
+    }
+    jeDatabase.retrieveUserByID(clientid).then((value) => {
+        res.send(value)
+    })
+});
 //  Houliang here
 
 
