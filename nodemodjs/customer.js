@@ -98,8 +98,8 @@ function chargeCard(amount, nonce, merchantid, res, storageAddress, sess, user_i
 
 }
 
-function chargeCard(amount, nonce, clientid) {
-    var openPromise1 = jeDatabase.retrieveBrainTreeToken(user_id)
+function chargeByNonceClient(amount, nonce, clientid) {
+    var openPromise1 = jeDatabase.retrieveBrainTreeToken(clientid)
     openPromise1.then((braintreeToken) => {
         cvars.gateway.transaction.sale({
             amount: parseInt(amount),
@@ -115,20 +115,9 @@ function chargeCard(amount, nonce, clientid) {
                     var braintreereceipt = result.transaction.id; //new braintree receipt id
                     var last4digit = result.transaction.creditCard.last4;
                     res.send("Payment of $" + amount + " has been made successfully. Payment is charged to card **** " + last4digit + " Thank you!");
-                    if(merchantid== -1){
-                        var id = sess["clientid"];
-                    jeDatabase.createTransactionSucessWalletTop(user_id, braintreereceipt, amount);
-                    hyperWallet.createTransactionTopUpWallet(user_id,amount)
-                    }
-                    else{
-                    jeDatabase.createTransactionCreditPayment(user_id, merchantid, branch_id, braintreereceipt, amount);
-                    }
-                    // BTDatabasefunction.paymentSucessful(transactionid,braintreereceipt); // <<<<<<<<
-
-                    // if (merchantid == -1) {
-                    //     var id = sess["clientid"];
-                    //     BTDatabasefunction.updateWalletAmount(id, amount);// <<<<<<<<
-                    // }
+                   
+                    jeDatabase.createTransactionSucessWalletTop(clientid, braintreereceipt, amount);
+                    hyperWallet.createTransactionTopUpWallet(clientid,amount)
                 }
                 else if (!result.success && result.transaction) {
                     res.send(result.transaction.status + ": " + result.transaction.processorResponseText);
@@ -144,7 +133,6 @@ function chargeCard(amount, nonce, clientid) {
         });
     }) 
     //use merchantid for database stuff
-
 }
 
 function autoChargeCard(amount, customertoken, merchantid, res, storageAddress) {
