@@ -301,6 +301,22 @@ app.get("/walletPay", function (req, res) {
     })
 });
 
+app.post("/walletPay", function (req, res) {
+    if (!req.body.clientid,!req.body.merchantid,!req.body.branchid,!req.body.amount) {
+        res.send("<p>Please provide clientid, merchantid, amount</p>");
+        return;
+    }
+    var errorCheck = hyperWallet.processTransaction(req.body.clientid,req.body.merchantid,req.body.amount)
+    errorCheck.then((err)=>{
+        if(err='error'){
+            res.send("<p>Error occured during processing of transaction please try again</p>");
+        }
+        else{
+            jeDatabase.createTransactionWalletPayment(req.body.clientid,req.body.merchantid,req.body.branchid,req.body.amount)
+        }
+    })
+});
+
 app.get("/walletRefund", function (req, res) {
     if (!req.query.clientid,!req.query.merchantid,!req.query.branchid,!req.query.amount) {
         res.send("<p>Please provide clientid merchantid, amount</p>");
