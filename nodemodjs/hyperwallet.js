@@ -49,7 +49,7 @@ function retrieveTransaction() {
         });
     });
 };
-retrieveTransactionByID(123)
+// retrieveTransactionByID(123)
 function retrieveTransactionByID(clientid) {
     return new Promise((resolve, reject) => {
         request(url + 'api/system/transactions', function (error, response, body) {

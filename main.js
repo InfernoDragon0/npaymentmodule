@@ -260,12 +260,13 @@ app.get("/testcustomer", function (req, res) {
 });
 
 app.post("/walletAdd", function (req, res) {
-    if (!req.body.clientid,!req.body.amount,!req.body.nonce) {
+    if (!req.body.clientID||!req.body.amount||!req.body.nonce) {
         res.send("<p>Please provide clientid, amount</p>");
         return;
     }
-    customer.chargeByNonceClient(req.body.amount, req.body.nonce,req.body.clientid);
+    console.log("DASDAS"+req.body.clientID)
     
+    customer.chargeByNonceClient(req.body.amount, req.body.nonce,req.body.clientID,res);
     //customer.openCustomerPay(req.session, res.query.amount,-1,res,page,"savedAddress",-1,res.query.clientid)
     // Adds a transaction record along the process, unless the other methods
     
