@@ -308,7 +308,7 @@ app.post("/walletPay", function (req, res) {
     }
     var errorCheck = hyperWallet.processTransaction(req.body.clientid,req.body.merchantid,req.body.amount)
     errorCheck.then((err)=>{
-        if(err='error'){
+        if(err=='error'){
             res.send("<p>Error occured during processing of transaction please try again</p>");
         }
         else{
@@ -339,7 +339,8 @@ app.post("/retrieveuserid", function (req, res) {
         res.send("<p>Please provide clientid</p>");
         return;
     }
-    jeDatabase.retrieveUserByID(clientid).then((value) => {
+    
+    jeDatabase.retrieveUserByID(req.body.clientid).then((value) => {
         res.send(value)
     })
 });
