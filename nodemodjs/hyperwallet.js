@@ -59,11 +59,12 @@ function retrieveTransactionByID(clientid) {
             }
             console.log('body:', body);
             var clientarray = []
+            body = JSON.parse(body)
             body.forEach(function(element) {
                 if (element.asset == "resource:org.acme.jenetwork.clientWallet#clientWalletID:" + clientid)
                     clientarray.push(element)
             });
-            console.log("clientarray is " + clientarray)
+            console.log("clientarray is " + JSON.stringify(clientarray))
             resolve(clientarray);
         });
     });
