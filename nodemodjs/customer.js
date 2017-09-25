@@ -67,6 +67,7 @@ function chargeCard(amount, nonce, merchantid, res, storageAddress, sess, user_i
 
                     console.log("amount = "+amount);
                     if(merchantid== -1){
+                        var id = sess["clientid"];
                     jeDatabase.createTransactionSucessWalletTop(user_id, braintreereceipt, amount);
                     hyperWallet.createTransactionTopUpWallet(user_id,amount)
                     }
@@ -75,10 +76,10 @@ function chargeCard(amount, nonce, merchantid, res, storageAddress, sess, user_i
                     }
                     // BTDatabasefunction.paymentSucessful(transactionid,braintreereceipt); // <<<<<<<<
 
-                    if (merchantid == -1) {
-                        var id = sess["clientid"];
-                        BTDatabasefunction.updateWalletAmount(id, amount);// <<<<<<<<
-                    }
+                    // if (merchantid == -1) {
+                    //     var id = sess["clientid"];
+                    //     BTDatabasefunction.updateWalletAmount(id, amount);// <<<<<<<<
+                    // }
                 }
                 else if (!result.success && result.transaction) {
                     res.send(result.transaction.status + ": " + result.transaction.processorResponseText);

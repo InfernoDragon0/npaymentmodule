@@ -1,7 +1,7 @@
 const request = require('superagent');
 const databaseConfig = require("./config/databaseConfig.js");
 
-const url =`${databaseConfig.url}`
+const url = `${databaseConfig.url}`
 const primaryKey = `${databaseConfig.primary_key}`
 // const primaryKey = 'NnGUnatosykldCDs6m5Ma4tBGlb6Wyue912JLQ=='
 
@@ -413,6 +413,8 @@ function createTransactionSucessWalletTop(user_id, btTransaction_id, amount) {
     return new Promise((resolve, reject) => {
         var form = {
             "fk_user_id": user_id,
+            "fk_merchant_id": -1,
+            "fk_branch_id": -1,
             "braintree_transaction_id": btTransaction_id,
             "transaction_amount": amount,
             "transaction_type": 4 // Sucess Wallet Top Up
@@ -440,12 +442,14 @@ function createTransactionSucessWalletTop(user_id, btTransaction_id, amount) {
         })
     });
 }
-function createTransactionSucessWalletPay(user_id, merchant_id,branch_id, amount) {
+// createTransactionSucessWalletPay(5, 12345, 1, 10)
+function createTransactionSucessWalletPay(user_id, merchant_id, branch_id, amount) {
     return new Promise((resolve, reject) => {
         var form = {
             "fk_user_id": user_id,
             "fk_merchant_id": merchant_id,
             "fk_branch_id": branch_id,
+            "braintree_transaction_id": "walletTransactionPayment",
             "transaction_amount": amount,
             "transaction_type": 5 // Sucess Wallet Pay
         }
@@ -459,7 +463,8 @@ function createTransactionSucessWalletPay(user_id, merchant_id,branch_id, amount
                 .send(form)
                 .end((err, res) => {
                     console.log(res.body)
-                    if (res.statusCode == 200) {
+                    console.log(res.statusCode)
+                    if (res.statusCode == 201) {
                         console.log('Transaction Response\n')
                         resolve(res);
                     }
@@ -472,13 +477,14 @@ function createTransactionSucessWalletPay(user_id, merchant_id,branch_id, amount
         })
     });
 }
-function createTransactionSucessWalletRefund(user_id, merchant_id,branch_id, amount) {
+function createTransactionSucessWalletRefund(user_id, merchant_id, branch_id, amount) {
     return new Promise((resolve, reject) => {
         var form = {
             "fk_user_id": user_id,
             "fk_merchant_id": merchant_id,
             "fk_branch_id": branch_id,
-            "transaction_amount": amount,
+            "braintree_transaction_id": "walletTransactionRefund",
+            "transaction_amount": -amount,
             "transaction_type": 6 // Sucess Wallet Refund
         }
         var promiseCreateToken = createToken();
@@ -577,24 +583,24 @@ function retrieveSettlements() {
     return new Promise((resolve, reject) => {
         var promiseCreateToken = createToken();
         promiseCreateToken.then((token) => {
-                request.GET(url + '/settlement')
-                    .set('Content-Type', 'application/json')
-                    .set('Accept', 'application/json')
-                    .set('Authorization', 'Bearer ' + token)
-                    .end((err, res) => {
-                        if (res.statusCode == 200) {
-                            console.log('Settlement details retrieved successfully\n')
-                            resolve(res);
-                        }
-                        else if (res.statusCode == 400) {
-                            console.log('Invalid\n')
-                            resolve(res);
-                        }
-                        else if (res.statusCode == 404) {
-                            console.log('Settlement not found\n')
-                            resolve(res);
-                        }
-                    })
+            request.GET(url + '/settlement')
+                .set('Content-Type', 'application/json')
+                .set('Accept', 'application/json')
+                .set('Authorization', 'Bearer ' + token)
+                .end((err, res) => {
+                    if (res.statusCode == 200) {
+                        console.log('Settlement details retrieved successfully\n')
+                        resolve(res);
+                    }
+                    else if (res.statusCode == 400) {
+                        console.log('Invalid\n')
+                        resolve(res);
+                    }
+                    else if (res.statusCode == 404) {
+                        console.log('Settlement not found\n')
+                        resolve(res);
+                    }
+                })
         })
     });
 }
@@ -615,21 +621,21 @@ function createSettlement(form) {
     return new Promise((resolve, reject) => {
         var promiseCreateToken = createToken();
         promiseCreateToken.then((token) => {
-                request.POST(url + '/settlement')
-                    .set('Content-Type', 'application/json')
-                    .set('Accept', 'application/json')
-                    .set('Authorization', 'Bearer ' + token)
-                    .send(form)
-                    .end((err, res) => {
-                        if (res.statusCode == 200) {
-                            console.log('Settlement Response\n')
-                            resolve(res);
-                        }
-                        else if (res.statusCode == 400) {
-                            console.log('Invalid Settlement body\n')
-                            resolve(res);
-                        }
-                    })
+            request.POST(url + '/settlement')
+                .set('Content-Type', 'application/json')
+                .set('Accept', 'application/json')
+                .set('Authorization', 'Bearer ' + token)
+                .send(form)
+                .end((err, res) => {
+                    if (res.statusCode == 200) {
+                        console.log('Settlement Response\n')
+                        resolve(res);
+                    }
+                    else if (res.statusCode == 400) {
+                        console.log('Invalid Settlement body\n')
+                        resolve(res);
+                    }
+                })
         })
     });
 }
@@ -640,24 +646,24 @@ function retrieveIdSettlement(settlement_id) {
     return new Promise((resolve, reject) => {
         var promiseCreateToken = createToken();
         promiseCreateToken.then((token) => {
-                request.GET(url + '/settlement/' + settlement_id)
-                    .set('Content-Type', 'application/json')
-                    .set('Accept', 'application/json')
-                    .set('Authorization', 'Bearer ' + token)
-                    .end((err, res) => {
-                        if (res.statusCode == 200) {
-                            console.log('Settlement record retrieved successfully\n')
-                            resolve(res);
-                        }
-                        else if (res.statusCode == 400) {
-                            console.log('Invalid ID supplied\n')
-                            resolve(res);
-                        }
-                        else if (res.statusCode == 404) {
-                            console.log('Settlement not found\n')
-                            resolve(res);
-                        }
-                    })
+            request.GET(url + '/settlement/' + settlement_id)
+                .set('Content-Type', 'application/json')
+                .set('Accept', 'application/json')
+                .set('Authorization', 'Bearer ' + token)
+                .end((err, res) => {
+                    if (res.statusCode == 200) {
+                        console.log('Settlement record retrieved successfully\n')
+                        resolve(res);
+                    }
+                    else if (res.statusCode == 400) {
+                        console.log('Invalid ID supplied\n')
+                        resolve(res);
+                    }
+                    else if (res.statusCode == 404) {
+                        console.log('Settlement not found\n')
+                        resolve(res);
+                    }
+                })
         })
     });
 }
@@ -678,21 +684,21 @@ function updateIdSettlement(settlement_id, form) {
     return new Promise((resolve, reject) => {
         var promiseCreateToken = createToken();
         promiseCreateToken.then((token) => {
-                request.PUT(url + '/settlement/' + settlement_id)
-                    .set('Content-Type', 'application/json')
-                    .set('Accept', 'application/json')
-                    .set('Authorization', 'Bearer ' + token)
-                    .send(form)
-                    .end((err, res) => {
-                        if (res.statusCode == 200) {
-                            console.log('Updated settlement\n')
-                            resolve(res);
-                        }
-                        else if (res.statusCode == 400) {
-                            console.log('Invalid Settlement body\n')
-                            resolve(res);
-                        }
-                    })
+            request.PUT(url + '/settlement/' + settlement_id)
+                .set('Content-Type', 'application/json')
+                .set('Accept', 'application/json')
+                .set('Authorization', 'Bearer ' + token)
+                .send(form)
+                .end((err, res) => {
+                    if (res.statusCode == 200) {
+                        console.log('Updated settlement\n')
+                        resolve(res);
+                    }
+                    else if (res.statusCode == 400) {
+                        console.log('Invalid Settlement body\n')
+                        resolve(res);
+                    }
+                })
         })
     });
 }
@@ -705,24 +711,24 @@ function deleteIdSettlement(settlement_id) {
     return new Promise((resolve, reject) => {
         var promiseCreateToken = createToken();
         promiseCreateToken.then((token) => {
-                request.DELETE(url + '/settlement/' + settlement_id)
-                    .set('Content-Type', 'application/json')
-                    .set('Accept', 'application/json')
-                    .set('Authorization', 'Bearer ' + token)
-                    .end((err, res) => {
-                        if (res.statusCode == 204) {
-                            console.log('Successfully deleted Settlement\n')
-                            resolve(res);
-                        }
-                        else if (res.statusCode == 400) {
-                            console.log('Invalid ID supplied\n')
-                            resolve(res);
-                        }
-                        else if (res.statusCode == 404) {
-                            console.log('Settlement not found\n')
-                            resolve(res);
-                        }
-                    })
+            request.DELETE(url + '/settlement/' + settlement_id)
+                .set('Content-Type', 'application/json')
+                .set('Accept', 'application/json')
+                .set('Authorization', 'Bearer ' + token)
+                .end((err, res) => {
+                    if (res.statusCode == 204) {
+                        console.log('Successfully deleted Settlement\n')
+                        resolve(res);
+                    }
+                    else if (res.statusCode == 400) {
+                        console.log('Invalid ID supplied\n')
+                        resolve(res);
+                    }
+                    else if (res.statusCode == 404) {
+                        console.log('Settlement not found\n')
+                        resolve(res);
+                    }
+                })
         })
     });
 }
@@ -740,21 +746,21 @@ function confirmSettlement(settlement_id) {
     return new Promise((resolve, reject) => {
         var promiseCreateToken = createToken();
         promiseCreateToken.then((token) => {
-                request.PUT(url + '/settlement/completed')
-                    .set('Content-Type', 'application/json')
-                    .set('Accept', 'application/json')
-                    .set('Authorization', 'Bearer ' + token)
-                    .send({ "settlement_id": settlement_id }) // "settlement_id" : `${settlement_id}`
-                    .end((err, res) => {
-                        if (res.statusCode == 200) {
-                            console.log('Updated settlement\n')
-                            resolve(res);
-                        }
-                        else if (res.statusCode == 400) {
-                            console.log('Invalid settlement\n')
-                            resolve(res);
-                        }
-                    })
+            request.PUT(url + '/settlement/completed')
+                .set('Content-Type', 'application/json')
+                .set('Accept', 'application/json')
+                .set('Authorization', 'Bearer ' + token)
+                .send({ "settlement_id": settlement_id }) // "settlement_id" : `${settlement_id}`
+                .end((err, res) => {
+                    if (res.statusCode == 200) {
+                        console.log('Updated settlement\n')
+                        resolve(res);
+                    }
+                    else if (res.statusCode == 400) {
+                        console.log('Invalid settlement\n')
+                        resolve(res);
+                    }
+                })
         })
     });
 }
@@ -777,7 +783,7 @@ module.exports.createTransactionSucessWalletTop = createTransactionSucessWalletT
 module.exports.updateIdSettlement = updateIdSettlement;
 module.exports.deleteIdSettlement = deleteIdSettlement;
 module.exports.confirmSettlement = confirmSettlement;
-module.exports.createTransactionSucessWalletPay= createTransactionSucessWalletPay
-module.exports.createTransactionSucessWalletRefund=createTransactionSucessWalletRefund
+module.exports.createTransactionSucessWalletPay = createTransactionSucessWalletPay
+module.exports.createTransactionSucessWalletRefund = createTransactionSucessWalletRefund
 
 
