@@ -35,7 +35,7 @@ function processTransaction(clientID, merchantID, amount) {
         })
     })
 };
-// retrieveTransaction();
+//retrieveTransaction();
 function retrieveTransaction() {
     return new Promise((resolve, reject) => {
         request(url + 'api/system/transactions', function (error, response, body) {
@@ -49,7 +49,23 @@ function retrieveTransaction() {
     });
 };
 
-
+function retrieveTransactionByID(clientid) {
+    return new Promise((resolve, reject) => {
+        request(url + 'api/system/transactions', function (error, response, body) {
+            if (error) {
+                console.log('error:', error); // Print the error if one occurred 
+                return;
+            }
+            console.log('body:', body);
+            var clientarray = []
+            body.forEach(function(element) {
+                if (element.asset == "resource:org.acme.jenetwork.clientWallet#clientWalletID:" + clientid)
+                    clientarray.push(element)
+            });
+            resolve(clientarray);
+        });
+    });
+};
 
 function getClientWalletByClientID(id) {
     return new Promise((resolve, reject) => {
