@@ -200,7 +200,8 @@ function retrieveBrainTreeToken(user_id) {
                             }
                         }
                         if (found == 0) {
-                            console.log("No Braintree Account Found for User ID: " + user_id)
+                            console.log("No Braintree Account Found for User ID: " )
+                            console.log(user_id)
                             console.log("Please Create A Braintree Acount First")
                             resolve('No BrainTree Account found!')
                         } else if (found == 1) {

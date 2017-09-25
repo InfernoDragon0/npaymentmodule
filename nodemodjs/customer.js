@@ -98,7 +98,7 @@ function chargeCard(amount, nonce, merchantid, res, storageAddress, sess, user_i
 
 }
 
-function chargeByNonceClient(amount, nonce, clientid) {
+function chargeByNonceClient(amount, nonce, clientid,res) {
     var openPromise1 = jeDatabase.retrieveBrainTreeToken(clientid)
     openPromise1.then((braintreeToken) => {
         cvars.gateway.transaction.sale({
